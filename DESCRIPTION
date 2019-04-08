@@ -5,7 +5,7 @@ Published: 2019-04-05
 Author: Tohru Yamaguchi, email = tohru_yamaguchi@yahoo.co.jp
 Maintainer: Tohru Yamaguchi <tfyamaguchi@frontier.hokudai.ac.jp>
 Description: This package estimate and test the parameters of Lonini and Koopman model from a final count data of household infection.
-Depends: R (>= 3.5), MASS
+Depends: R (>= 3.4), MASS
 License: CC0
 Encoding: UTF-8
 LazyData: true
