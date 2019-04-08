@@ -1,8 +1,9 @@
 #
-# Longini IM, Koopman JS (1982) Household and community transmission
-#parameters from final distributions of infections in households.
-#
-#
+#' estimating probability
+#' @param B a probability of infection from cumunity
+#' @param Q a probability of infection from household
+#' @return A probability table
+#' @export
 estmjk <- function(B,Q){
   mjk <- matrix(NA,6,6)
   #browser()
@@ -323,7 +324,19 @@ initBQ <- function(ajk){
 #############################################################
 #
 #
+#' LKmodel.test
+#' @param x a dataset of household
+#' @param y another dataset of household
+#' @param method test method
+#' @return test results
+#' @importFrom stats optim pchisq
+#' @importFrom MASS ginv
+#' @examples
+#' fm <- LKmodel.test(x=ajk_Longini_table1)
+#' summary(fm)
+#' @export
 LKmodel.test <- function(x=NULL,y=NULL,method="SC"){
+  #UseMethod("LKmodel.test")
   #browser()
   initBx <- initBQ(x)$B0
   initQx <- initBQ(x)$Q0
@@ -331,9 +344,12 @@ LKmodel.test <- function(x=NULL,y=NULL,method="SC"){
     initBy <- initBQ(y)$B0
     initQy <- initBQ(y)$Q0
   }
-  add3 <- function(a,b){
-    if (is.na(a) & is.na(b)) res <- NA
-    else res <- sum(c(a,b),na.rm=TRUE)
+  add2 <- function(a,b){
+    #browser()
+    aa <- as.vector(a)
+    bb <- as.vector(b)
+    abc <- ifelse(is.na(aa) & is.na(bb),NA,rowSums(cbind(aa,bb),na.rm=TRUE))
+    res <- matrix(abc,nrow=nrow(a),ncol=ncol(a),byrow=FALSE)
     return(res)
   }
   while(nrow(x)<6) x <- rbind(x,rep(NA,ncol(x)))
@@ -342,7 +358,7 @@ LKmodel.test <- function(x=NULL,y=NULL,method="SC"){
   if (!is.null(y)) {
     while(nrow(y)<6) y <- rbind(y,rep(NA,ncol(y)))
     while(ncol(y)<5) y <- cbind(y,rep(NA,nrow(y)))
-    xy <- matrix(mapply(add3,x,y),6,5,byrow=FALSE)
+    xy <- add2(x,y)
     initBxy <- initBQ(xy)$B0
     initQxy <- initBQ(xy)$Q0
   }
@@ -429,20 +445,55 @@ LKmodel.test <- function(x=NULL,y=NULL,method="SC"){
   else if (method=="SC") methodlong <- "Score test"
   else if (method=="LR") methodlong <- "Likelihood ratio test"
   #
-  return(list(Q1=res1$par[2],B1=res1$par[1],V1=V1,chi1=chi1,p.value1=p.value1,Q2=ifelse(is.null(y),NA,res2$par[2]),B2=ifelse(is.null(y),NA,res2$par[1]),V2=V2,chi2=chi2,p.value2=p.value2,Qmix=ifelse(is.null(y),NA,res3$par[2]),Bmix=ifelse(is.null(y),NA,res3$par[1]),Vmix=V3,stat=stat,p.value=p.value,method=methodlong))
+  #
+  return(list(x=x,y=y,Q1=res1$par[2],B1=res1$par[1],V1=V1,chi1=chi1,p.value1=p.value1,Q2=ifelse(is.null(y),NA,res2$par[2]),B2=ifelse(is.null(y),NA,res2$par[1]),V2=V2,chi2=chi2,p.value2=p.value2,Qmix=ifelse(is.null(y),NA,res3$par[2]),Bmix=ifelse(is.null(y),NA,res3$par[1]),Vmix=V3,stat=stat,p.value=p.value,method=methodlong))
 }
 #
-print.summary.LKmodel <- function(fm){
-  cat(sprintf("Qhat.x; %.3f\t",fm$Q1))
-  cat(sprintf("Bhat.x; %.3f\n",fm$B1))
-  cat(sprintf("Var(Qhat.x); %.4f\t",fm$V1[2,2]))
-  cat(sprintf("Var(Bhat.x); %.4f\n",fm$V1[1,1]))
-  cat(sprintf("Goodness of fit chi^2; %.3f\t",fm$chi1))
-  cat(sprintf("P-value; %.3f\n",fm$p.value1))
-  cat(sprintf("Test method; %s\n",fm$method))
-  cat(sprintf("Test statistics; %.3f\t",fm$stat))
-  cat(sprintf("P-value; %.3f\n",fm$p.value))
+#' A details of summary
+#'
+#' @title summary: summary function
+#' @param object LKmodel.test obeject
+#' @param ... other arguments
+#' @rdname summary
+#' @export summary
+summary <- function(object, ...){
+  UseMethod("summary")
 }
+#
+#' Suumary LK-model.test method
+#' @param object LKmodel.test obeject
+#' @param ... other arguments
+#' @export
+summary.LKmodel.test <- function(object, ...){
+  #cat("Data.x;\t",object$x)
+  #cat("Data.y;\t",object$y)
+  cat(sprintf("Qhat.x; %.3f\t",object$Q1))
+  cat(sprintf("Bhat.x; %.3f\n",object$B1))
+  cat(sprintf("Var(Qhat.x); %.4f\t",object$V1[2,2]))
+  cat(sprintf("Var(Bhat.x); %.4f\n",object$V1[1,1]))
+  cat(sprintf("Goodness of fit for x chi^2; %.3f\t",object$chi1))
+  cat(sprintf("P-value; %.3f\n",object$p.value1))
+  if (!is.null(object$y)){
+    cat(sprintf("Qhat.y; %.3f\t",object$Q2))
+    cat(sprintf("Bhat.y; %.3f\n",object$B2))
+    cat(sprintf("Var(Qhat.y); %.4f\t",object$V2[2,2]))
+    cat(sprintf("Var(Bhat.y); %.4f\n",object$V2[1,1]))
+    cat(sprintf("Goodness of fit for y chi^2; %.3f\t",object$chi2))
+    cat(sprintf("P-value; %.3f\n",object$p.value2))
+    cat(sprintf("Test method; %s\n",object$method))
+    cat(sprintf("Test statistics; %.3f\t",object$stat))
+    cat(sprintf("P-value; %.3f\n",object$p.value))
+  }
+}
+#
+#' Suumary default method
+#' @param object LKmodel.test obeject
+#' @param ... other arguments
+#' @export
+summary.default = function(object, ...) {
+  summary.LKmodel.test(object)
+}
+#
 ########################### EMD OF PROGRAM #######################################
 
 LKrct <- function(houseN,b0,q0,b1,q1){
