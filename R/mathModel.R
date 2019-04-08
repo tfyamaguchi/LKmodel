@@ -1,4 +1,3 @@
-#
 #' estimating probability
 #' @param B a probability of infection from cumunity
 #' @param Q a probability of infection from household
