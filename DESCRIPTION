@@ -1,14 +1,24 @@
 Package: LKmodel
+<<<<<<< HEAD
 Title: Infection model inspiered by Longini and Koopman 
 Version: 0.11
 Published: 2019-04-05
+=======
+Title: Infection model inspiered by Longini and Koopman (1982)
+Version: 0.1
+Published: 2019-04-14
+>>>>>>> 2c7f6950f2e0732421b3745b5f9401d40c1d12a2
 Author: Tohru Yamaguchi, email = tohru_yamaguchi@yahoo.co.jp
 Maintainer: Tohru Yamaguchi <tfyamaguchi@frontier.hokudai.ac.jp>
-Description: What the package does (one paragraph).
-Depends: R (>= 3.5), MASS
+Description: This package estimate and test the parameters of Lonini and Koopman model from a final count data of household infection.
+Depends: R (>= 3.4), MASS
 License: CC0
 Encoding: UTF-8
 LazyData: true
 URL: http://github.com/tfyamaguchi/LKmodel 
 BugRepOrts: http://github.com/tfyamaguchi/LKmodel/issues
 RoxygenNote: 6.1.1
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

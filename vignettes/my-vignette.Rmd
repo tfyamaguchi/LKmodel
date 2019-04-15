@@ -1,0 +1,604 @@
+---
+title: "家庭内最終感染者数分布から感染確率を推定し検定する統計的方法"
+author: "山口 亨"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: ./Articles.bib
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## abstract
+In the second research sector, a medical agent with an influenza infection preventive effect is developing. For a estimation of the infectiveness under the assumption of mathematical model,  either of 
+the 'basic reproduction number' which is an estimate of the number of secondary infected persons from one infected patient or the 'secondary infection risk (SIR)' with exposure of one infected patient in small-scale groups such as house and school is frequently employed. Longini and Koopman proposed an infectious disease mathematical model (L-K model) which estimating an infection risk from distribution of the number of infected patients in the home within one season. There are two parameters, B and Q, which should be estimated in this model, 1-B can be interpreted medically as the infection probability from a community, and 1-Q as the household secondary attack rate which is an index of SIR. Although a previous paper described the estimation method for these parameters in an epidemiological observation study, the statistical test method for the clinical trial which compares two intervention groups was not studied. In order to show the efficacy of the medical agent under development, it is necessary to plan, carry out and conduct data-analysis of the clinical trial however, the calculation of the required number of subjects is impossible without the appropriate test method. Then, the parameter estimation method was extended, and the test method for the difference of Q between 2 groups in this L-K model was newly developed. The developed tests were derived from the framework of the statistical test method for the likelihood based-model called a 'likelihood ratio test', 'Wald test', and 'score test'. The computational procedure was packed into the computer program and the parameter was estimated from the data in the previous paper. As a result, the calculation result described in the paper was reproduced. Moreover, the number of subjects in a clinical trial was estimated from Monte Carlo simulation using the developed test method, and the reasonable results were obtained. It is thought that the developed statistical test method has progressivity in respect of the method which was not considered.
+
+## Introduction
+
+毎年冬から春にかけてインフルエンザが流行する．
+流行に備えて，ワクチンの予防接種を受けたり，
+流行が始まれば，
+今年のインフルエンザはこんな症状が出るとかいう情報を集めたり，
+家庭や学校でも職場でも，うがい・手洗いをしたり，
+予防のためマスクをしたりといったことが当然のように行われる．
+また医師のあいだでも，今年のワクチンはよく効いているとか効いていないとかが話題になるようである．
+しかし，これらワクチンやうがいや手洗いやマスクの効果は本当にあるのだろうか？
+経験的にそうしたほうが良いから，効くはずだからと考えて，いや考えていないのではないだろうか？
+これら予防手段の効果を適切に評価する方法を考えたい．
+
+まず最初に，「感染が広がる強さ」のことを仮に「感染性」と定義する，
+感染性の推定には，１人の感染者が生み出す２次感染者数の推定値である基本再生産数$R_{0}$[^1]か，
+家庭内あるいは学校内など小規模集団で，１人の感染者による暴露が与えられたときの2次感染リスク(SIR; secondary infection risk)
+のいずれかを用いて検討することが多い[@Nishiura_2015]．
+前者の$R_{0}$を指標とする場合は，$R_{0}>1$では，感染が拡大していき，$R_{0}<0$では，感染が縮小していくという関係があり，
+公衆衛生上の指標としての価値が高い．
+一方でSIRは，個人や家族にとって重要な指標であり，解釈も直感的で容易である．
+この論文では，SIRに絞って検討する．
+
+ではこのSIRなどの指標を具体的に計算するには，どういったデータを集め，どういった解析をすれば良いだろうか．
+ここで統計モデルが必要になる．
+統計モデルは，メカニズムの本質を見失わずに単純化し，
+限定されたパラメータを使って現象を数式で表したものである．
+特に，感染症の伝搬は人や動物が介在し，独特で複雑な現象なので，
+感染症数理モデルという専門用語が使われ，世界中の研究者がこれを研究している．
+
+家庭内伝搬の感染症数理モデルとして，
+@Longini_1982_7082755 は，2つのパラメータ$B,Q$を持つ感染症モデルを提案した(L-Kモデル)．
+ここでパラメータ$B$は，あるひとが1シーズンの流行を通じてコミュニティから感染を免れる確率であり，
+パラメータ$Q$は，あるひとが家庭内にいる１人の感染者から感染を免れる確率である．
+この定義から，$1-B$はコミュニティにおける感染確率(community probability of infection: CPI)と称され，
+感染症伝搬におけるコミュニティ関与度合いを評価する静的な指標として用いられる．
+一方で$1-Q$は，家庭内における2次感染の確率であり，$100 \times (1-Q)$は
+（感染したひとのすべてが発症すると仮定すると）初期感染者が1人のみの，
+狭義の家庭内2次発症割合(household secondary attack rate: SAR)に等しい．
+
+@Haber_1988_3358986 はその後，log-linear model を利用してL-Kモデルに替わる，より一般的なモデルを提唱した．
+これにより，個人レベルのリスク要因（たとえば大人か小児か，ワクチン注射ありなし，など）を共変量として取り込み，
+群間差の検定や傾向性の検定なども行えるようにした．
+さらに，一般化線形混合モデル（generalized lenear mixed model）等が利用可能となり，
+家庭内などの濃厚な接触が起きる場合に発症数の分散が過分散(over dispaersion)となる現象を，
+より適切にモデル化する方法も利用されはじめている．
+
+
+さて，新しい処置・治療法の有効性を主張するには，無作為化比較試験(RCT)を実施して，その有効性を
+主張するのが必要になる．またこの有効性の検証には，プラセボや既存治療と比較し統計学的な検定を用いて，
+有意に優っていなければならない．L-Kモデルにおいても，$B$や$Q$を比較して有効性を主張できそうだが，
+検定法については既存の論文において言及されているものがほとんど見当たらない．
+検定法がなければRCTをデザインする際に被験者数の見積もりすらできないので，
+実用上の大きな問題である．
+唯一 @Haber_1988_3358986 において，検定には尤度比検定を使ったと記述があるが，
+尤度比検定が最も良いとは限らない．
+従って本研究の第１の目的は，L-Kモデルを用いた検定法の検討である[@Tango_2000a]．
+
+ところで，感染症のかかりやすさは，個体差があることは経験的に理解できる．
+たとえば，こどもはおとなより風邪をひきやすいし．
+学校や職場あるいは混雑した電車の中など，感染者と接する機会が多いひとは，感染しやすいかもしれない．
+しかしながら，RCTデザインの臨床試験では，
+ランダム化の際に層別化割付をしてこれらの因子について均等に割付けできるし，
+予想もしなかった，見落としていた因子があったとしても，
+そういった因子を含めて均等な割り付けが期待されるので，大きな問題にはならない．
+しかし成人と未成年者で各々$B$や$Q$を推定し，その違いを検定したいと考えるのは当然であろう．
+しかしL-Kモデルでは，家族単位で家族の大きさと発症者数を集計して検討するので，
+成人と未成年者を個別に推定・検定するのは容易ではない．
+従って，本研究の第2の目的は，子供と大人各々の$B,Q$の推定である．
+
+さらに実施可能性を考慮すると，家庭内の全員から同意書をとり割りつけられた処置をするのは困難であり，
+特に子供に介入するのは多くの場合，倫理的に難しいという問題がある．
+そこで，同意がとれた個人に対してランダム化を行い，その個人が所属する家庭をL-Kモデルを利用してモデル化し，
+群間を比較したい．
+従って本研究の第3の目的は，家庭内の全員ではなく，一部の構成員にだけランダム化するRCTを考慮して,
+L-Kモデルを拡張することである．
+
+[^1]:「アールノート」と発音する
+
+## Method
+
+L-Kモデルは，統計学の専門用語である尤度(likelihood；確からしさ)に基づいた感染症数理モデルのひとつである．
+L-Kモデルの尤度関数については，既報[@Longini_1982_7082755]に詳しい説明があるがここでも簡単に述べる．
+尤度に基づくモデルの仮説検定では，「尤度比検定」，「Wald検定」，「スコア検定」が良く利用されるので[@Tango_2000a]，
+これらをそれぞれ構成して比較検討する．
+次に一度に得られたデータから，成人と未成年者のパラメータを各々推定するモデルについて検討する．
+さらに，家庭内の一部の構成員だけがランダム化される場合について検討する．
+
+
+### 家庭の全員が同じ処置を受ける場合の感染性推定法
+
+本研究で扱うデータは，例えばTable \ref{lk1988table1}のようなデータである．
+この表は，家庭の大きさに対して，１シーズンでそれぞれ何人感染したかにより分類したものである．
+ヒトを単位に数えるのではなく，家庭を単位に数えているところに注意されたい．
+この例では，278家庭が調査された．
+
+まず表の１列目には，１人暮らしの家庭が分類されていて，感染者0人の家庭が65，感染者1人つまり全員が感染した家庭が13あったことが示されている．
+同様に２列目は2人家族の家庭で，感染者0人，1人，2人がぞれぞれ88，14，4あったことが示されている．以下同様である．
+つまり，たとえばある2人家族の家庭を1シーズン終了後に調査したとき，感染者0人か1人か2人全員かのどれかに分類されることになる．
+
+
+```{r results='asis', echo=FALSE}
+stargazer::stargazer(x=LKmodel::ajk_Haber_table1,title="Observed frequencies on a household level from the influenza A(H3N2) epidemic season (1977-1978) in Tecumseh, Michigan", type="html",label="lk1988table1",summary=FALSE)
+```
+
+表\ref{prob}は，表のセルに記号$a_{jk}$を用いたものである．
+添字の$k$は家庭の大きさを表し．$j$は感染者数を表す．
+従って$a_{jk}$は，$k$人家族の家庭で，$j$人感染した家庭の数を表す．
+ここで，ある$k$人家族の家庭が１シーズンに$j$人感染する確率$m_{jk}$を考える．
+これは，家族構成$f$が$k$の時，$j$人が感染する条件付き確率とみなせる．つまり，
+\begin{align*}
+\Pr(j|f=k)=m_{jk}
+\end{align*}
+である．
+このとき$m_{jk}$の推定値$\widehat{m}_{jk}$は明らかに
+\begin{align}
+\widehat{m}_{jk} = \frac{a_{jk}}{\sum_{j}a_{jk}}
+\end{align}
+である．また$m_{jk}$は確率なので，
+\begin{align*}
+\sum_{j}=m_{jk} = 1
+\end{align*}
+である．
+
+
+
+\begin{table}[!htb]
+\caption{Table \ref{lk1988table1}の記号による表現}
+\label{prob}
+\centering
+\begin{tabular}{rp{15mm}p{15mm}p{15mm}p{15mm}}
+\hline
+& \multicolumn{4}{l}{Number of susceptibles per household} \\
+\cmidrule{2-5}
+Number of infected & 1 & 2 & 3 & 4 \\
+
+\hline
+0 & $a_{01}$ & $a_{02}$ & $a_{03}$ & $a_{04}$ \\
+1 & $a_{11}$ & $a_{12}$ & $a_{13}$ & $a_{14}$ \\
+2 & ---  &  $a_{22}$ &   $a_{23}$ & $a_{24}$\\
+3 & ---  & --- & $a_{33}$ & $a_{34}$ \\
+4 & --- & --- & --- & $a_{44}$\\
+\hline
+Total & $\sum_{j} a_{j1}$ & $\sum_{j} a_{j2} $ & $\sum_{j} a_{j3} $ & $\sum_{j} a_{j4} $ \\
+\hline
+\end{tabular}
+\end{table}
+
+### 尤度関数と対数尤度関数
+
+さて，ここでL-Kモデルを導入する．
+L-Kモデルでは，コミュニティから感染する確率を$1-B$で表し，
+家庭内の感染者から感染する確率を$1-Q$で表す．
+
+\begin{figure}[!h]
+\begin{picture}(50,180)
+\multiput(10,10)(0,20){8}{\circle{10}}
+\multiput(30,10)(0,20){8}{\circle{10}}
+\multiput(50,10)(0,20){8}{\circle{10}}
+\put(10,10){\circle*{10}}
+\put(30,10){\circle*{10}}
+\put(50,10){\circle*{10}}
+%
+\put(10,30){\circle*{10}}
+\put(50,30){\circle*{10}}
+%
+\put(30,50){\circle*{10}}
+\put(50,50){\circle*{10}}
+%
+\put(10,70){\circle*{10}}
+\put(30,70){\circle*{10}}
+%
+\put(50,90){\circle*{10}}
+%
+\put(30,110){\circle*{10}}
+%
+\put(10,130){\circle*{10}}
+%
+\put(70,150){$j=0,\quad B^3$}
+\put(70,130){$j=1,\quad (1-B)B^2Q^2$}
+\put(70,110){$j=1,\quad (1-B)B^2Q^2$}
+\put(70, 90){$j=1,\quad (1-B)B^2Q^2$}
+\put(70,70){$j=2,\quad \{(1-B)^{2} + 2(1-B)B(1-Q)\}BQ^2$}
+\put(70,50){$j=2,\quad  \{(1-B)^{2} + 2(1-B)B(1-Q)\}BQ^2$}
+\put(70,30){$j=2,\quad  \{(1-B)^{2} + 2(1-B)B(1-Q)\}BQ^2$}
+\put(70,10){$j=3 \quad 1-m_{03} - m_{13} - m_{23}$}
+\end{picture}
+\caption{3人家族の場合の生起確率$m_{jk}$．黒丸は感染者，白丸は非感染者を表す．}\label{mjk1}
+\end{figure}
+
+$k$人家族で$j$人感染する場合の生起確率$m_{jk}$を求める\citep{Longini_1982_7082755}．
+まず例として，3人家族の場合について考える．
+Figure \ref{mjk1}を参照されたい．
+上から，$j=0$つまり，1人も感染しない確率は，明らかに$B \times B \times B=B^3$である．
+2行目から，4行目は$j=1$の場合である．
+3人のうち，1人がコミュニティから感染し，かつ残りの2人は，コミュニティからの感染を免れ，
+かつ感染した1人からの二次感染を各々逃れるので，$(1-B)\times BQ \times BQ=(1-B)B^2Q^2$である．
+
+5行目から7行目は，$j=2$の場合である．
+この場合，感染のパターンは2つある．
+ひとつは，2人ともコミュニティから感染する場合で，その確率は$(1-B)^2$である．
+いまひとつは，1人がコミュニティから感染し，あとの1人がその感染者から二次感染する場合である．
+その確率は，$2(1-B)B(1-Q)$である．ここで2がかかっているのは，
+感染者2人のうち最初に感染するひとは2通りあるからである．
+さらに3人目は，コミュニティからの感染から逃れ，かつ2人の感染者からの感染を逃れているので，
+その確率は$BQ^2$である．これらをすべてあわせた確率は，
+$\{(1-B)^2 + 2(1-B)B(1-Q)\}BQ^2$となる．
+
+最後に，8行目の3人全員が感染する場合$j=3$だが，これはすべての場合の生起確率の和が1になることを利用し，
+引き算で求めれば良い．
+以上を一般化して書くと，
+\begin{align}\label{prob1}
+m_{ijk}=&
+\left(
+\begin{array}{c}
+k \\
+j
+\end{array}
+\right)
+m_{ijj}B^{k-j}Q_{i}^{j(k-j)},\quad j<k  \nonumber \\
+\text{and}& \\
+m_{ikk} =& 1-\sum_{j=0}^{k-1}m_{ijk} \nonumber
+\end{align}
+となる
+\footnote{式(\ref{prob1})の$\left(
+\begin{array}{c}
+k \\
+j
+\end{array}
+\right)$は，組み合わせ${}_{k}C_{j}$の別の書き方である}．
+これで，3人の家庭では，$B$と$Q$が既知であれば，$j$人感染する確率$m_{j3}$が計算で求まることになる．
+つまり，$N$家庭を調査したときの$\widehat{a}_{j3}$を$\widehat{a}_{j3}=N \times m_{j3}$より求めることができる．
+ここでは$k=3$の場合を例示したが，$k=1,2,\cdots$の$m_{jk}$や$\widehat{a}_{jk}$も同様の計算で求められる．
+
+だが，我々が求めたいのは，$B$と$Q$が与えられたときの$\widehat{a}_{jk}$ではなく，
+観測値である$a_{jk}$が得られた時の，$B$，$Q$の推定値$\widehat{B}$，$\widehat{Q}$である．
+従って式(\ref{prob1})を，$B$，$Q$をパラメータとする関数と考えることとする．
+さらにそれをデータの数だけ掛け合わせた形にすると，
+これが統計学の専門用語で，尤度関数と呼ばれる関数となる．
+
+
+
+これを利用して，L-Kモデルでの尤度関数$L$は，
+\begin{align}\label{likelihood1}
+L(Q_{1},Q_{2},B) = \prod_{k}\prod_{j}\prod_{i}m_{ijk}^{a_{ijk}}
+\end{align}
+となる．
+${ijk}$は$m$の添え字で，$a_{ijk}$は$m_{ijk}$の指数で，人数を表すことに注意されたい．
+ここで$m_{ijk}$は，$i$群に属する$k$人家庭が$j$人感染する確率である．
+
+また対数尤度$l$は，式(\ref{likelihood1})の対数をとって，
+\begin{align}\label{prob3}
+l(Q_{1},Q_{2},B) =\ln L = c + \sum_{k}\sum_{j}\sum_{i}a_{ijk}\left\{\ln m_{ijj} + (k-j)\ln B + j(k-j) \ln Q_{i}\right\}
+\end{align}
+である．これは，$Q_{1} \neq Q_{2}$とした，対立仮説$H_{1}$の下での対数尤度である．
+
+%\subsubsection{$H_{0}$の下での最尤推定量}
+次に，$H_{0}$の下での対数尤度を求める．このとき，$H_{0}:Q_{1}=Q_{2}$であるので，これを$Q$とおく．
+このときの尤度$L_{0}$は，
+\begin{align}\label{likelihood0}
+L_{0}(Q,B) = \prod_{k}\prod_{j}\prod_{i}m_{ijk}^{a_{ijk}}
+\end{align}
+となる．また対数尤度$l_{0}$は，
+\begin{align}
+l_{0}(Q,B) =\ln L = c + \sum_{k}\sum_{j}\sum_{i}a_{ijk}\left\{\ln m_{ijj} + (k-j)\ln B + j(k-j) \ln Q\right\}
+\end{align}
+となる，ここで$Q,B$の推定量$\widehat{Q},\widetilde{B}$は，$l_(0)$を数値最適化により最大化して求める\footnote{こうして求めた推定量を最尤推定量という．}．
+$H_{0}$のもとでの最尤推定量$\widetilde{\boldsymbol{\theta_{0}}}$は，$U(\boldsymbol{\theta})$の次元に合わせて．
+
+\begin{align}
+\widetilde{\boldsymbol{\theta_{0}}}= \left[
+\begin{array}{c}
+\widehat{Q}\\
+\widehat{Q}\\
+\widetilde{B}
+\end{array}
+\right]
+\end{align}
+とおく
+
+
+### L-Kモデルのための検定
+
+ここでは，発症した家庭構成員が見つかった時点で，家庭単位で2つの群にランダム割り付けして，
+実薬群には感染の拡大を防止する剤による介入を行い，
+プラセボ群には，効果のない剤による介入を行う試験デザインを想定する．
+%発症した時点から観察を開始するので，
+主に2次感染発症割合(SAR):$1-Q$に興味があり，
+2つの群のQの推定量の比較を行いたい．この際，パブリックからの感染を免れる確率:$B$については，2つの群で同じ値をとるものとする．
+モデルの確率分布関数を$M$とすると，
+\[
+a_{ijk} \sim M(Q_{i},B) \quad (i=1,2; ~j=0,1,\cdots,5; ~ k=1,2,\cdots,5)
+\]
+である．
+ここで$a_{ijk}$は人数を表し，$i$は群を表し，$j$は発症した人数，$k$は家庭の大きさを表す．
+ここでは1人暮らしから，5人家庭までを想定している．
+帰無仮説，対立仮説は，
+\begin{align*}
+H_{0}: Q_{1} = Q_{2} \\
+H_{1}: Q_{1} \neq Q_{2}
+\end{align*}
+とする．ここで全パラメータを
+\[
+\boldsymbol{\theta} = 
+\left[
+\begin{array}{c}
+Q_{1} \\
+Q_{2} \\
+B 
+\end{array}
+\right]
+\]
+とおく．このとき，ベクトル
+\[
+\mathbf{C} = 
+\left[
+\begin{array}{c}
+-1 \\
+1 \\
+0 
+\end{array}
+\right]
+\]
+を考えると，帰無仮説・対立仮説は，
+\begin{align*}
+H_{0}:\mathbf{C}^{T}\boldsymbol{\theta} = 0 \\
+H_{1}:\mathbf{C}^{T}\boldsymbol{\theta} \neq 0
+\end{align*}
+である．
+これは帰無仮説$H_{0}$は，$Q_{2}-Q_{1}=0$，つまり$Q_{1}=Q_{2}$を表現している[^2]．
+
+[^2]: ここで上付きの$T$は転置を表す．
+
+
+### 尤度比検定の構成
+
+帰無仮説の下での尤度と対立仮説の下での尤度の比を考える．
+それぞれの尤度は，それぞれ式(\ref{likelihood0})と式(\ref{likelihood1})で導出済みである．
+\begin{align}
+\lambda = \frac{L(\tilde{\boldsymbol \theta}_{1})}{L(\hat{\boldsymbol \theta_{0}})}
+\end{align}
+帰無仮説が正しければ，この比は1に近づく．
+尤度比検定統計量とはこの比の対数をとって，(-2)倍した統計量である．
+これを対数尤度を用いて表すと，
+\begin{align}
+\chi_{LR}^2 = -2(l(\tilde{\boldsymbol \theta}_{1}) - l(\hat{\boldsymbol \theta_{0}})) \sim \chi^{2}_{1} 
+\end{align}
+となる．$\chi^{2}_{1}$は，自由度1のカイ二乗分布の確率密度関数である．
+有意水準$\alpha$の尤度比検定は，
+\begin{align}\label{test1}
+\chi_{LR}^{2} >\boldsymbol{\chi}^{2}(1,1-\alpha)
+\end{align}
+のときに$H_{0}$を棄却すれば良い．式(\ref{test1})の右辺は，自由度1のカイ二乗分布累積分布関数の，下側$(1-\alpha)\times 100$\%点を表す．
+有意水準$\alpha$は通常0.05が使われる．
+
+### Wald検定の構成
+この統計量は帰無仮説が正しければ，対立仮説の下で推定された$\mathbf{C}^{T}\boldsymbol \theta$も$\mathbf{0}$に近づくことが期待される性質に着目したものである．
+つまり，漸近的に平均$\mathbf{0}$，分散$\mathbf{C}^{T}I_{F}(\boldsymbol \theta)^{-1}\mathbf{C}$の正規分布に従う性質を利用したものである．
+検定統計量は，
+\begin{align}
+\chi_{W}^{2} = (\mathbf{C}^{T}\hat{\boldsymbol \theta})^{T} (\mathbf{C}^{T}I_{F}(\hat{\boldsymbol \theta})^{-1}\mathbf{C})^{-1}\mathbf{C}^{T} \hat{\boldsymbol \theta} \sim \chi^{2}_{1}
+\end{align}
+となる．
+ここで$I_{F}(\boldsymbol \theta)$はFisherの情報量行列で，その定義は，
+\begin{align}
+I_{F}(\boldsymbol{\theta}) =& - \left[
+\begin{array}{ccc}
+\mathrm{E}_{H_{1}}\left[\frac{\partial^{2}l}{\partial Q_{1}^{2}}(Q_{1},Q_{2},B) \right] & \mathrm{E}_{H_{1}}\left[\frac{\partial^{2}l}{\partial Q_{1} \partial Q_{2}}(Q_{1},Q_{2},B) \right] & \mathrm{E}_{H_{1}}\left[\frac{\partial^{2}l}{\partial Q_{1} \partial B}(Q_{1},Q_{2},B) \right]\\
+ \mathrm{E}_{H_{1}}\left[\frac{\partial^{2}l}{\partial Q_{1} \partial Q_{2}}(Q_{1},Q_{2},B) \right] & \mathrm{E}_{H_{1}}\left[\frac{\partial^{2}l}{\partial Q_{2}^{2}}((Q_{1},Q_{2},B) \right] & \mathrm{E}_{H_{1}}\left[\frac{\partial^{2}l}{\partial Q_{2} \partial B}((Q_{1},Q_{2},B) \right] \\
+ \mathrm{E}_{H_{1}}\left[\frac{\partial^{2}l}{\partial Q_{1} \partial B}(Q_{1},Q_{2},B) \right] & \mathrm{E}_{H_{1}}\left[\frac{\partial^{2}l}{\partial Q_{2} \partial B}((Q_{1},Q_{2},B) \right] & \mathrm{E}_{H_{1}}\left[\frac{\partial^{2}l}{\partial B^{2}}((Q_{1},Q_{2},B) \right] 
+\end{array}
+\right] 
+\end{align}
+である．
+有意水準$\alpha$の両側Wald検定は，
+\begin{align}
+\chi_{W}^{2} > \boldsymbol{\chi}^{2}(1,1-\alpha)
+\end{align}
+のときに$H_{0}$を棄却すれば良い．
+
+この統計量の特徴は対立仮説の下での最尤推定量だけで計算できる点である．
+
+
+### スコア検定の構成
+この検定は，スコア関数$U(\boldsymbol{\theta})$が漸近的に平均$0$，分散$I_{F}({\boldsymbol \theta})$の正規分布に従う性質を利用したものである．
+ここでスコア関数とは対立仮説$H_{1}$のもとでの対数尤度$l$(式(\ref{prob3}))の1階偏微分のことである．つまり，
+\begin{align}\label{score}
+U(\boldsymbol{\theta})= \left[
+\begin{array}{c}
+\frac{\partial l}{\partial Q_{1}}(Q_{1},Q_{2},B)\\
+\frac{\partial l}{\partial Q_{2}}(Q_{1},Q_{2},B)\\
+\frac{\partial l}{\partial B}(Q_{1},Q_{2},B)
+\end{array}
+\right]
+=  \left[ 
+\begin{array}{c} 
+\sum_{k} \sum_{j} a_{1jk} \left\{ \frac{1}{m_{1jj}}\left(\frac{\partial m_{1jj}}{\partial Q_{1}}\right) + \frac{j(k-j)}{Q_{1}}\right\} \\
+\sum_{k} \sum_{j} a_{2jk} \left\{ \frac{1}{m_{2jj}}\left(\frac{\partial m_{2jj}}{\partial Q_{2}}\right) + \frac{j(k-j)}{Q_{2}}\right\} \\
+\sum_{k} \sum_{j} \sum_{i} a_{ijk} \left\{ \frac{1}{m_{ijj}}\left(\frac{\partial m_{ijj}}{\partial B}\right) + \frac{(k-j)}{B}\right\} 
+\end{array}
+\right]
+\end{align}
+である．ここでスコア関数は，$H_{1}$の下で，
+\begin{align}
+U(\boldsymbol \theta) \sim N(\mathbf{0}, I_{F}(\boldsymbol{\theta}))
+\end{align}
+となる\footnote{ベクトル$U(\boldsymbol \theta)$は，平均$\mathbf{0}$，分散共分散行列$I_{F}(\boldsymbol \theta)$の多変量正規分布に従う事を示している}．
+%ここで，$\mathrm{E}_{H_{1}}()$は，対立仮説$H_{1}$の下での期待値を表す．
+
+%\subsubsection{検定統計量の構成と検定方法}
+次に，$H_{0}$のもとでの最尤推定量を代入したスコア関数の値$U(\widehat{\boldsymbol{\theta}})$を求める．
+
+\begin{align}\label{lh}
+U(\widetilde{\boldsymbol{\theta}})= \left[
+\begin{array}{c}
+\frac{\partial l}{\partial Q_{1}}(\widehat{Q},\widehat{Q},\widetilde{B})\\
+\frac{\partial l}{\partial Q_{2}}\widehat{Q},\widehat{Q},\widetilde{B})\\
+\frac{\partial l}{\partial B}(\widehat{Q},\widehat{Q},\widetilde{B})
+\end{array}
+\right]
+=  \left[ 
+\begin{array}{c} 
+\sum_{k} \sum_{j}  a_{1jk} \left\{ \frac{1}{\widehat{m_{1jj}}}\left(\frac{\partial \widehat{m_{1jj}}}{\partial \widehat{Q}}\right) + \frac{j(k-j)}{\widehat{Q}}\right\} \\
+\sum_{k} \sum_{j}  a_{2jk} \left\{ \frac{1}{\widehat{m_{2jj}}}\left(\frac{\partial \widehat{m_{2jj}}}{\partial \widehat{Q}}\right) + \frac{j(k-j)}{\widehat{Q}}\right\} \\
+\sum_{k} \sum_{j} \sum_{i} a_{ijk} \left\{ \frac{1}{\widehat{m_{ijj}}}\left(\frac{\partial \widehat{m_{ijj}}}{\partial \widetilde{B}}\right) + \frac{(k-j)}{\widetilde{B}}\right\} 
+\end{array}
+\right]
+\end{align}
+となる．
+
+また，フィッシャー情報量行列は，
+\begin{align}\label{fi}
+I_{F}(\boldsymbol{\theta}) 
+=& - \left[
+\begin{array}{ccc}
+\mathrm{E}_{H_{a}}\left[\frac{\partial^{2}l}{\partial Q_{1}^{2}}(\widehat{Q}_{1},\widehat{Q}_{2},\widehat{B}) \right] & 0 & \mathrm{E}_{H_{a}}\left[\frac{\partial^{2}l}{\partial Q_{1} \partial B}(\widehat{Q}_{1},\widehat{Q}_{2},\widehat{B}) \right]\\
+0 & \mathrm{E}_{H_{a}}\left[\frac{\partial^{2}l}{\partial Q_{2}^{2}}((\widehat{Q}_{1},\widehat{Q}_{2},\widehat{B}) \right] & \mathrm{E}_{H_{a}}\left[\frac{\partial^{2}l}{\partial Q_{2} \partial B}((\widehat{Q}_{1},\widehat{Q}_{2},\widehat{B}) \right] \\
+ \mathrm{E}_{H_{a}}\left[\frac{\partial^{2}l}{\partial Q_{1} \partial B}(\widehat{Q}_{1},\widehat{Q}_{2},\widehat{B}) \right] & \mathrm{E}_{H_{a}}\left[\frac{\partial^{2}l}{\partial Q_{2} \partial B}((\widehat{Q}_{1},\widehat{Q}_{2},\widehat{B}) \right] & \mathrm{E}_{H_{a}}\left[\frac{\partial^{2}l}{\partial B^{2}}((\widehat{Q}_{1},\widehat{Q}_{2},\widehat{B}) \right] 
+\end{array}
+\right] 
+\end{align}
+これより，検定統計量は，
+\begin{align}\label{sc}
+\chi_{SC}^{2} = U(\widehat{\boldsymbol{\theta}})^{\prime}I_{F}(\widehat{\boldsymbol{\theta}})^{-1}U(\widetilde{\boldsymbol{\theta}})
+\end{align}
+となる．
+ここで右辺の上付きの$-1$は，逆行列を表す．
+
+有意水準$\alpha$の両側Score検定は，
+\begin{align}\label{test}
+\chi_{SC}^{2} >\boldsymbol{\chi}^{2}(1,1-\alpha)
+\end{align}
+のときに$H_{0}$を棄却すれば良い．
+
+### 発症者がなかった家庭数が観測されない場合
+通常，発症者は病院を受診するので，発症者が出現した家庭数は病院で観測すればよく，比較的容易に観測できる．
+しかし，発症者が出現しなかった家庭数を観測するのは容易ではない．
+そのため，発症者がいなかった家庭数が観測されなくとも，
+パラメータ$B,Q$が推定できると都合が良い場合がある．
+この問題は，統計学的には確率密度関数の下側が切断された場合に相当し，
+その計算方法が確立している[@岩崎_2002]．
+具体的には，確率密度関数である式(\ref{prob1})を次の式に置き換えればよい\citep{Longini_1982_7082755}．
+\begin{align}\label{prob5}
+m_{ijk}^{\prime}=&\left(
+\begin{array}{c}
+k \\
+j
+\end{array}
+\right)m_{ijj}^{\prime}B^{k-j}Q_{i}^{j(k-j)}/(1-B^k),\quad j<k  \nonumber \\
+\text{and}& \\
+m_{ikk}^{\prime} =& 1-\sum_{j=0}^{k-1}m_{ijk}^{\prime} \nonumber
+\end{align}
+
+
+## ソフトウエア
+L-Kモデルに基ずく統計的推定・検定は，想定する家庭の大きさが大きくなるにつれて計算が非常に複雑で量が多く，
+かつ$B,Q_{i}$の推定には反復計算が必要なので，コンピュータの利用が必須である．
+
+### 実際の手順（スコア検定の場合）
+$H_{0}$のもとでの対数尤度を求めるため，2つの群のデータを併合した上で，パラメータ$\widehat{Q}$,$\widehat{B}$を求める．
+
+1.    パラメータ$\widehat{Q}$,$\widehat{B}$を利用して対数尤度$\widehat{l}$を求める．
+2.    式(\ref{lh})を利用して，スコア$U(\widehat{\theta})$を求める．
+3.    式(\ref{fi})を利用して，フィッシャー情報量行列$I_{F}(\widehat{\boldsymbol{\theta}})$を求める．
+4.    式(\ref{sc})を利用して，スコア検定量$\chi_{score}^{2}$を求め，検定を行う．
+
+ソフトウエアは，統計解析ソフトの$\mathbf{R}$でプログラミングした．
+パラメータの分散の推定やフィッシャー情報量行列の計算には，
+生起確率$m_{jk}$の1次及び2次偏微分が必要であり，
+さらに，感染者が観測されなかった家庭数が観測されなかった場合の$m^{\prime}_{jk}$についてもこれが必要である．
+これらはたいへん煩雑な計算になる(Appendix)．
+
+## 結果
+### 既報との一致
+パラメータの推定法については，既報に具体的なデータとともに推定結果が記載されているので，
+開発したプログラムによる計算結果と一致するかどうか検討した(Table paper)．
+
+
+|      |            | 既報   | 本報   | 一致性         |
+|-----:|-----------:|-------:|-------:|---------------:|
+| @Longini_1982_7082755 のTable 1
+| |$\hat{Q}$         | 0.834  | 0.834  | $\Large \circ$ |
+| |$\mathrm{Var}(Q)$ | 0.0063 | 0.0063 | $\Large \circ$ |
+| |$\hat{B}$         | 0.886  | 0.886  | $\Large \circ$ |
+| |$\mathrm{Var}(B)$ | 0.0009 | 0.0009 | $\Large \circ$ |
+| |$\chi^2$          | 1.222  | 1.222  | $\Large \circ$ |
+| @Longini_1982_7082755 のTable 2}
+| |$\hat{Q_{1}}$      | 0.601  | 0.541  | $\Large \times$|
+| |$\hat{B_{1}}$ & 0.715 & 0.999 & $\Large \times$\\
+| |$\chi^{2}_{1}$ & 0.018 & 0.387 & $\Large \times$\\
+| |$\hat{Q_{2}}$ & 0.664 & 0.594 & $\Large \times$\\
+| |$\hat{B_{2}}$ & 0.655 & 0.999 & $\Large \times$\\
+| |$\chi^{2}_{2}$ & 0.018 & 1.161 & $\Large \times$\\
+|------------------------------------------------------
+| @Longini_1982_7082755 のTable 3
+| $\hat{Q_{1}}$ & 0.900 & 0.898 & $\Large \times$\\
+| $\hat{B_{1}}$ & 0.992 & 0.999 & $\Large \times$\\
+| $\chi^{2}_{1}$ & 0.864 & 0.880 & $\Large \times$\\
+| $\hat{Q_{2}}$ & 0.878 & 0.878 & $\Large \circ$\\
+| $\hat{B_{2}}$ & 0.999 & 0.999 & $\Large \circ$\\
+| $\chi^{2}_{2}$ & 5.91 & 5.99 & $\Large \times$\\
+| $\hat{Q_{3}}$ & 0.872 & 0.872 & $\Large \circ$\\
+| $\hat{B_{3}}$ & 0.999 & 0.999 & $\Large \circ$\\
+| $\chi^{2}_{3}$ & 4.12 & 4.18 & $\Large \times$\\
+|------------------------------------------------------
+\bf{\citet{Haber_1988_3358986}のTable 1}\\
+& $\widehat{CPI}$ & 0.140 & 0.140 & $\Large \circ$\\
+& $\mathrm{SE}(CPI)$ & 0.015 & 0.015 & $\Large \circ$\\
+& $\widehat{SAR}$ & 15.5 & 15.5 & $\Large \circ$\\
+& $\mathrm{SE}(B)$ & 3.5 & 3.5 & $\Large \circ$\\
+& $\chi^2$ & 12.14 & 12.14 & $\Large \circ$\\
+:     開発したソフトウエアによる計算結果と既報の計算結果との比較 \label{paper}
+
+
+まず，感染しなかった家庭数が観測されている．
+\citet{Longini_1982_7082755}のTable 1では，報告されているすべての数字が完全に一致した．
+また，\citet{Haber_1988_3358986}のTable 1でも，報告されているすべての数字が一致した．
+一方で，感染しなかった家庭数が観測されていない
+\citet{Longini_1982_7082755}のTable 2では乖離がみられ，
+データ数の多い\citet{Longini_1982_7082755}のTable 3でも，Table 2ほどではないが，若干の乖離がみられる．
+
+
+
+
+
+## Styles
+
+The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+
+    output: 
+      rmarkdown::html_vignette:
+        css: mystyles.css
+
+## Figures
+
+The figure sizes have been customised so that you can easily put two images side-by-side. 
+
+```{r, fig.show='hold'}
+plot(1:10)
+plot(10:1)
+```
+
+You can enable figure captions by `fig_caption: yes` in YAML:
+
+    output:
+      rmarkdown::html_vignette:
+        fig_caption: yes
+
+Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
+
+## More Examples
+
+You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(head(mtcars, 10))
+```
+
+Also a quote using `>`:
+
+> "He who gives up [code] safety for [code] speed deserves neither."
+([via](https://twitter.com/hadleywickham/status/504368538874703872))
