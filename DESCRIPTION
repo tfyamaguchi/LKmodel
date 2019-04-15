@@ -1,7 +1,17 @@
 Package: LKmodel
+<<<<<<< HEAD
+Title: Infection model inspiered by Longini and Koopman 
+Version: 0.11
+Published: 2019-04-05
+=======
 Title: Infection model inspiered by Longini and Koopman (1982)
 Version: 0.1
+<<<<<<< HEAD
 Published: 2019-04-15
+=======
+Published: 2019-04-14
+>>>>>>> 2c7f6950f2e0732421b3745b5f9401d40c1d12a2
+>>>>>>> c865f7dc9ea249cf3747ebd6582acd0501480eca
 Author: Tohru Yamaguchi, email = tohru_yamaguchi@yahoo.co.jp
 Maintainer: Tohru Yamaguchi <tfyamaguchi@frontier.hokudai.ac.jp>
 Description: This package estimate and test the parameters of Lonini and Koopman model from a final count data of household infection.
