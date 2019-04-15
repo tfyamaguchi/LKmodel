@@ -146,27 +146,17 @@ stargazer::stargazer(x=LKmodel::ajk_Haber_table1,title="Observed frequencies on 
 
 
 
-\begin{table}[!htb]
-\caption{Table \ref{lk1988table1}の記号による表現}
-\label{prob}
-\centering
-\begin{tabular}{rp{15mm}p{15mm}p{15mm}p{15mm}}
-\hline
-& \multicolumn{4}{l}{Number of susceptibles per household} \\
-\cmidrule{2-5}
-Number of infected & 1 & 2 & 3 & 4 \\
 
-\hline
-0 & $a_{01}$ & $a_{02}$ & $a_{03}$ & $a_{04}$ \\
-1 & $a_{11}$ & $a_{12}$ & $a_{13}$ & $a_{14}$ \\
-2 & ---  &  $a_{22}$ &   $a_{23}$ & $a_{24}$\\
-3 & ---  & --- & $a_{33}$ & $a_{34}$ \\
-4 & --- & --- & --- & $a_{44}$\\
-\hline
-Total & $\sum_{j} a_{j1}$ & $\sum_{j} a_{j2} $ & $\sum_{j} a_{j3} $ & $\sum_{j} a_{j4} $ \\
-\hline
-\end{tabular}
-\end{table}
+|Number of susceptibles per household
+|:---|---:|---:|---:|---:|
+| Number of infected | 1 | 2 | 3 | 4 |
+0 | $a_{01}$ | $a_{02}$ | $a_{03}$ | $a_{04}$ |
+1 | $a_{11}$ | $a_{12}$ | $a_{13}$ | $a_{14}$ |
+2 | ---  |  $a_{22}$ |   $a_{23}$ | $a_{24}$|
+3 | ---  | --- | $a_{33}$ | $a_{34}$ |
+4 | --- | --- | --- | $a_{44}$|
+Total | $\sum_{j}a_{j1}$ | $\sum_{j}a_{j2}$ | $\sum_{j}a_{j3}$ | $\sum_{j}a_{j4}$ |
+: [lk1988table1] の記号による表現
 
 ### 尤度関数と対数尤度関数
 
@@ -519,38 +509,36 @@ $H_{0}$のもとでの対数尤度を求めるため，2つの群のデータを
 
 
 |      |            | 既報   | 本報   | 一致性         |
-|-----:|-----------:|-------:|-------:|---------------:|
-| @Longini_1982_7082755 のTable 1
+|:-----|-----------:|-------:|-------:|---------------:|
+| **@Longini_1982_7082755** のTable 1
 | |$\hat{Q}$         | 0.834  | 0.834  | $\Large \circ$ |
 | |$\mathrm{Var}(Q)$ | 0.0063 | 0.0063 | $\Large \circ$ |
 | |$\hat{B}$         | 0.886  | 0.886  | $\Large \circ$ |
 | |$\mathrm{Var}(B)$ | 0.0009 | 0.0009 | $\Large \circ$ |
 | |$\chi^2$          | 1.222  | 1.222  | $\Large \circ$ |
-| @Longini_1982_7082755 のTable 2}
-| |$\hat{Q_{1}}$      | 0.601  | 0.541  | $\Large \times$|
-| |$\hat{B_{1}}$ & 0.715 & 0.999 & $\Large \times$\\
-| |$\chi^{2}_{1}$ & 0.018 & 0.387 & $\Large \times$\\
-| |$\hat{Q_{2}}$ & 0.664 & 0.594 & $\Large \times$\\
-| |$\hat{B_{2}}$ & 0.655 & 0.999 & $\Large \times$\\
-| |$\chi^{2}_{2}$ & 0.018 & 1.161 & $\Large \times$\\
-|------------------------------------------------------
-| @Longini_1982_7082755 のTable 3
-| $\hat{Q_{1}}$ & 0.900 & 0.898 & $\Large \times$\\
-| $\hat{B_{1}}$ & 0.992 & 0.999 & $\Large \times$\\
-| $\chi^{2}_{1}$ & 0.864 & 0.880 & $\Large \times$\\
-| $\hat{Q_{2}}$ & 0.878 & 0.878 & $\Large \circ$\\
-| $\hat{B_{2}}$ & 0.999 & 0.999 & $\Large \circ$\\
-| $\chi^{2}_{2}$ & 5.91 & 5.99 & $\Large \times$\\
-| $\hat{Q_{3}}$ & 0.872 & 0.872 & $\Large \circ$\\
-| $\hat{B_{3}}$ & 0.999 & 0.999 & $\Large \circ$\\
-| $\chi^{2}_{3}$ & 4.12 & 4.18 & $\Large \times$\\
-|------------------------------------------------------
-\bf{\citet{Haber_1988_3358986}のTable 1}\\
-& $\widehat{CPI}$ & 0.140 & 0.140 & $\Large \circ$\\
-& $\mathrm{SE}(CPI)$ & 0.015 & 0.015 & $\Large \circ$\\
-& $\widehat{SAR}$ & 15.5 & 15.5 & $\Large \circ$\\
-& $\mathrm{SE}(B)$ & 3.5 & 3.5 & $\Large \circ$\\
-& $\chi^2$ & 12.14 & 12.14 & $\Large \circ$\\
+| **@Longini_1982_7082755** のTable 2}
+| |$\hat{Q_{1}}$     | 0.601  | 0.541  | $\Large \times$|
+| |$\hat{B_{1}}$     | 0.715  | 0.999  | $\Large \times$|
+| |$\chi^{2}_{1}$    | 0.018  | 0.387  | $\Large \times$|
+| |$\hat{Q_{2}}$     | 0.664  | 0.594  | $\Large \times$|
+| |$\hat{B_{2}}$     | 0.655  | 0.999  | $\Large \times$|
+| |$\chi^{2}_{2}$    | 0.018  | 1.161  | $\Large \times$|
+| **@Longini_1982_7082755** のTable 3
+| |$\hat{Q_{1}}$ | 0.900 | 0.898 | $\Large \times$|
+| |$\hat{B_{1}}$ | 0.992 | 0.999 | $\Large \times$|
+| |$\chi^{2}_{1}$ | 0.864 | 0.880 | $\Large \times$|
+| |$\hat{Q_{2}}$ | 0.878 | 0.878 | $\Large \circ$|
+| |$\hat{B_{2}}$ | 0.999 | 0.999 | $\Large \circ$|
+| |$\chi^{2}_{2}$ | 5.91 | 5.99 | $\Large \times$|
+| |$\hat{Q_{3}}$ | 0.872 | 0.872 | $\Large \circ$|
+| |$\hat{B_{3}}$ | 0.999 | 0.999 | $\Large \circ$|
+| |$\chi^{2}_{3}$ | 4.12 | 4.18 | $\Large \times$|
+| **@Haber_1988_3358986** のTable 1
+| |$\widehat{CPI}$ | 0.140 | 0.140 | $\Large \circ$|
+| |$\mathrm{SE}(CPI)$ | 0.015 | 0.015 | $\Large \circ$|
+| |$\widehat{SAR}$ | 15.5 | 15.5 | $\Large \circ$|
+| |$\mathrm{SE}(B)$ | 3.5 | 3.5 | $\Large \circ$|
+| |$\chi^2$ | 12.14 | 12.14 | $\Large \circ$|
 :     開発したソフトウエアによる計算結果と既報の計算結果との比較 \label{paper}
 
 
