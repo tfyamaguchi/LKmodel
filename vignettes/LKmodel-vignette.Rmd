@@ -484,7 +484,7 @@ m_{ikk}^{\prime} =& 1-\sum_{j=0}^{k-1}m_{ijk}^{\prime} \nonumber
 \end{align}
 
 
-## ソフトウエア
+### ソフトウエア
 L-Kモデルに基ずく統計的推定・検定は，想定する家庭の大きさが大きくなるにつれて計算が非常に複雑で量が多く，
 かつ$B,Q_{i}$の推定には反復計算が必要なので，コンピュータの利用が必須である．
 
@@ -550,43 +550,187 @@ $H_{0}$のもとでの対数尤度を求めるため，2つの群のデータを
 データ数の多い\citet{Longini_1982_7082755}のTable 3でも，Table 2ほどではないが，若干の乖離がみられる．
 
 
+### 検出力の計算
+$B$および$Q$が既知のもとでの，発症者数の確率は，式(\ref{prob1})より求められるので，
+モンテカルロシミュレーションにより仮想データを発生させ，LK-modelに基ずくスコア検定を繰り返すことで，
+観察する家庭数$N$をパラメータとした検出力曲線を描くことができる．
 
-
-
-## Styles
-
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
+まず最初に検定法の違いを示す．検討した3つの検定法は，漸近的に同等であると言われているが，
+サンプルサイズが小さい場合には，相違がみられる．
+Fig. \ref{powertest}は，プラセボ群を$B_{P}=0.85$,$Q_{P}=0.75$とし，
+実薬群を$B_{A}=0.9$,$Q_{A}=0.9$として，3つの検定の検出力を比較した．
+なお，シミュレーションは各点で1000回繰り返して検出力を計算した．
+```{r include=FALSE}
+library(LKmodel)
+```
+```{r results='asis', echo=FALSE, fig.show='hold',fig.align="center",fig.width=6,fig.height=6,fig.cap="検出力曲線による検定法の比較．有意水準は両側$p=0.05$で，プラセボ群の$B$は0.85，$Q$は0.75とし，実薬群の$B$は0.9，$Q$は0.9とした．"}
+###################### END OF PROGRAM #######################
+# Comparison of test methods
+#############################################################
+para <- c("LR","W","SC")
+methodlong <- c("Likelihood ratio test","Wald test","Score test")
+zero <- FALSE
+nFamily <- 4
+N <- 100
+#
+for (cond in 1:3){
+  Ba <- 0.90
+  Bp <- 0.85
+  Qa <- 0.90
+  Qp <- 0.75
+  #
+  proba <- estmjk(Ba,Qa)
+  probp <- estmjk(Bp,Qp)
+  #
+  ccpval <- NULL
+  for (eachn in seq(50,100,5)){
+    #cat("N=",eachn,"\n")
+    cpval <- NULL
+    for (n in 1:N){
+      cda <- cdp <- NULL
+      while(length(cda)< eachn) {
+        temp <- sum(runif(1) > cumsum(proba[1:5,5]))
+        if (zero & temp==0) temp <- NULL
+        cda <- c(cda,temp)
+      }
+      while(length(cdp)< eachn){
+        temp <- sum(runif(1) > cumsum(probp[1:5,5]))
+        if (zero & temp==0) temp <- NULL
+        cdp <- c(cdp,temp)
+      }
+      #truehist(cda,prob=FALSE)
+      #truehist(cdp,prob=FALSE)
+      catda <- tabulate(factor(cda,levels=0:4),nbins=5)
+      catdp <- tabulate(factor(cdp,levels=0:4),nbins=5)
+      mdata <- mdatp <- matrix(NA,5,4)
+      mdata[,nFamily] <- catda
+      mdatp[,nFamily] <- catdp
+      if (zero) mdata[1,] <- mdatp[1,] <- NA
+      #browser()
+      cpval <- c(cpval, LKmodel.test(mdata,mdatp,method=para[cond])$p.value)
+    }
+    ccpval <- rbind(ccpval,c(N=eachn,pval=length(cpval[cpval<0.05])/length(cpval)))
+  }
+  #
+  if(cond==1) {
+    plot(ccpval,type="b",bty="l",lty="dashed",ylab="Power",xlab="N of household each group",ylim=c(0,1.0),col=cond,pch=cond)
+  } else {
+    points(ccpval,type="b",bty="l",lty="dashed",col=cond,pch=cond)
+  }
+}
+legend("bottomright",legend=list(methodlong[1],methodlong[2],methodlong[3]),bty="n",col=1:3,pch=1:3)
+abline(h=0.8,lty=2)
+#
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
+この結果から，尤度比検定はかなりリベラルである．
+Wald検定とScore検定はほぼ同等だが，Score検定のほうが若干サンプルサイズに敏感で性質が良いと考えられた．
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
-
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
+次に，このスコア検定を用いて，各パラメータを変化させて，検出力を検討した．
+過去の探索的試験から，無処置の場合，$B\simeq 0.85$，$Q\simeq 0.75$と想定された．
+また，active群では，$B\simeq 0.9$，$Q\simeq 0.9$であった．
+シミュレーションでは，active群で$B$が0.85で変化しない場合と，$B$が0.9に変化する場合とを想定し，
+active群の$Q$は，0.85,0.875,0.9の場合で家庭数と検出力の関係をプロットした．
+家庭数は，すべて4人家庭を想定した．
+```{r results='asis', echo=FALSE, fig.show='hold',fig.align="center",fig.width=6,fig.height=6,fig.cap="実薬群のQを変化させた際の検出力曲線．有意水準は両側p=0.05で，プラセボ群のQは0.75とした．"}
+paraBa <- c(0.96,0.97,0.98,0.99)
+paraQa <- c(0.82,0.84,0.86,0.88)
+zero <- FALSE
+nFamily <- 3
+#
+for (cond in 1:4){
+  Ba <- paraBa[cond]
+  Bp <- 0.94
+  Qa <- paraQa[cond]
+  Qp <- 0.80
+  N <- 100
+  #
+  proba <- estmjk(Ba,Qa)
+  probp <- estmjk(Bp,Qp)
+  #
+  ccpval <- NULL
+  for (eachn in seq(20,160,20)){
+    #cat("N=",eachn,"\n")
+    cpval <- NULL
+    for (n in 1:N){
+      cda <- cdp <- NULL
+      while(length(cda)< eachn) {
+        temp <- sum(runif(1) > cumsum(proba[1:(nFamily+1),(nFamily+1)]))
+        if (zero & temp==0) temp <- NULL
+        cda <- c(cda,temp)
+      }
+      while(length(cdp)< eachn){
+        temp <- sum(runif(1) > cumsum(probp[1:(nFamily+1),(nFamily+1)]))
+        if (zero & temp==0) temp <- NULL
+        cdp <- c(cdp,temp)
+      }
+      catda <- tabulate(factor(cda,levels=0:nFamily),nbins=(nFamily+1))
+      catdp <- tabulate(factor(cdp,levels=0:nFamily),nbins=(nFamily+1))
+      mdata <- mdatp <- matrix(NA,(nFamily+1),nFamily)
+      mdata[,nFamily] <- catda
+      mdatp[,nFamily] <- catdp
+      if (zero) mdata[1,] <- mdatp[1,] <- NA
+      #browser()
+      cpval <- c(cpval, LKmodel.test(mdata,mdatp,method="LR")$p.value)
+    }
+    ccpval <- rbind(ccpval,c(N=eachn,pval=length(cpval[cpval<0.05])/length(cpval)))
+  }
+  #
+  if(cond==1) {
+    plot(ccpval,type="b",bty="l",lty="dashed",ylab="Power",xlab="N of household each group",ylim=c(0,1.0),col=cond,pch=cond)
+  } else {
+    points(ccpval,type="b",bty="l",lty="dashed",col=cond,pch=cond)
+  }
+}
+legend("bottomright",legend=list(paste("Qactive=",paraQa[1],", Bactive=",paraBa[1]),
+                                 paste("Qactive=",paraQa[2],", Bactive=",paraBa[2]),
+                                 paste("Qactive=",paraQa[3],", Bactive=",paraBa[3]),
+                                 paste("Qactive=",paraQa[4],", Bactive=",paraBa[4])),bty="n",col=1:4,pch=1:4)
+abline(h=0.8,lty=2)
 ```
 
-Also a quote using `>`:
+Fig. \ref{power}は検出力曲線である．
+(a)は$1-B$が0.15で変化しない場合，
+(b)は$1-B$が0.1に変化した場合である．
+臨床試験では，一般に検出力$1-\beta$は0.8以上が求められる．
+Fig. \ref{power}(a)は
+$1-Q$がプラセボ群の0.25に対して実薬群で0.1までに抑えられれば，
+両群の家庭数で140家庭くらいで十分なことがわかる．
+Figure \ref{power}(b)もほぼ同様で，$1-B$の変化は，
+$1-Q$の検定には殆ど影響しないことがわかった．
 
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+## Discussion
+ここで検討したL-K modelの良い点は，得られるパラメータの$1-B$及び$1-Q$が，それぞれ$CPI$及び$SAR$と医学的に解釈でき，
+理解しやすい点である．
+1982年に発表されたモデルであるが，
+近年の成書にも記載があり[@稲葉_2008]，依然として有用な感染症の数理モデルであると考えられる．
+しかし冒頭でも触れたとおり，検定法がほとんど見当たらないため，臨床試験での利用が難しかった．
+本報ではこの問題を解決し，利用可能にした点において，進歩性のある研究であると考えられる．
+
+無作為化比較試験(RCT)を行うのであれば，
+家庭内で発症したひとが出現した時点で介入を開始し，
+最終的に発症した人数を数えて群間で比較すれば良いという考えがある．
+しかし，その結果の解釈が難しい．
+なぜなら，家庭内に発症しているひとが出現した後でも，
+家庭員はその発症者以外の経路での発症リスクに暴露しているので，
+SARのみを比較しているとは言えないからである．
+そのため，医学的解釈が可能な推定値の比較が望まれる．
+
+なお，他の解析方法としては，@Haber_1988_3358986 は，
+L-Kモデルを対数線形モデル(log-linear model)に変形し，
+既存の統計ソフトウエアが利用できるようにした．
+例を挙げれば，
+暴露から感染までの時間情報が利用可能な場合には，生存時間解析が可能であり
+@Viboud_2004_15353055 ,@Macintryre_2009_19193267 では，Cox比例ハザードモデルが利用されている．
+また，@Cowling_2009_19652172 ,@Canini_2010_21103330 では，多変量ロジスティック回帰モデルが使われている．
+さらに，@Suess_2012_22280120 では，ロジスティック回帰モデルを構築するため，
+generalized estimating equations (GEE) approachを利用していると記述されている．
+これらのモデルでは，個体に特有な感染リスクなどの共変量による調整や個体差が考慮できるが，
+家庭内の感染のような相関構造をモデル化できないという欠点がある．
+その一方で，個体差と家庭内の相関を考慮した感染症の数理モデルとして，
+GLMM (generalized linear mixed model)が利用できる[@伊庭_2018]．
+これは，LMM (linear mixed model)を目的変数が正規分布しない場合にも適用できるよう拡張したモデルである[^3]．
+
+[^3]: 統計ソフトのSASでは，GLMMIX procedure, RではglmmML()関数で扱える．
+
+## References
