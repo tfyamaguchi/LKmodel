@@ -1,4 +1,4 @@
-#' LKmodel: A package for infectious model.
+#' LKmodel: A package for household infectious model.
 #'
 #' @references{
 #' Longini IM, Koopman JS (1982) Household and community transmission parameters from final distributions of infections in households.
