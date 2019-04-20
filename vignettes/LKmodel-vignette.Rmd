@@ -677,7 +677,7 @@ Wald検定とScore検定はほぼ同等だが，Score検定のほうが若干サ
 シミュレーションでは，active群で$B$が0.85で変化しない場合と，$B$が0.9に変化する場合とを想定し，
 active群の$Q$は，0.85,0.875,0.9の場合で家庭数と検出力の関係をプロットした．
 家庭数は，すべて4人家庭を想定した．
-```{r eval=TRUE, results='asis', echo=FALSE, fig.show='hold',fig.align="center",fig.width=6,fig.height=6,fig.cap="実薬群のQを変化させた際の検出力曲線．有意水準は両側p=0.05で，プラセボ群のQは0.75とした．"}
+```{r eval=TRUE, results='asis', echo=FALSE, fig.show='hold',fig.align="center",fig.width=6,fig.height=6,fig.cap="Power curve changing $Q$ in active group. The significant level was $p=0.05$, $Q=0.7$ in placebo group."}
 paraBa <- c(0.96,0.97,0.98,0.99)
 paraQa <- c(0.82,0.84,0.86,0.88)
 zero <- FALSE
