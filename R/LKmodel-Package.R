@@ -18,7 +18,42 @@ NULL
 #' Longini and Koopman (1982) Table2
 #' @docType data
 #' @keywords datasets
+#' @name ajk_Longini_table2Tecumeseh
+#' @format A dataframe
+NULL
+#' Houshold infeection data table
+#' Longini and Koopman (1982) Table2
+#' @docType data
+#' @keywords datasets
 #' @name ajk_Longini_table2Seatle
+#' @format A dataframe
+NULL
+#' Houshold infeection data table
+#' #' Longini and Koopman (1982) Table3
+#' @docType data
+#' @keywords datasets
+#' @name ajk_Longini_table3
+#' @format A dataframe
+NULL
+#' Houshold infeection data table
+#' #' Longini and Koopman (1982) Table3
+#' @docType data
+#' @keywords datasets
+#' @name ajk_Longini_table3uncrowded
+#' @format A dataframe
+NULL
+#' Houshold infeection data table
+#' #' Longini and Koopman (1982) Table3
+#' @docType data
+#' @keywords datasets
+#' @name ajk_Longini_table3crowded
+#' @format A dataframe
+NULL
+#' Houshold infeection data table
+#' #' Longini and Koopman (1982) Table3
+#' @docType data
+#' @keywords datasets
+#' @name ajk_Longini_table3overcrowded
 #' @format A dataframe
 NULL
 #' Houshold infeection data table
@@ -33,6 +68,13 @@ NULL
 #' @docType data
 #' @keywords datasets
 #' @name ajk_Longini_table2Tecumeseh
+#' @format A dataframe
+NULL
+#' Houshold infeection data table
+#' Haber et al. (1988)) Table1
+#' @docType data
+#' @keywords datasets
+#' @name ajk_Haber_table1
 #' @format A dataframe
 NULL
 #' Houshold infeection data table

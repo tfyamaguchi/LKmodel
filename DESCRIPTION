@@ -13,6 +13,10 @@ URL: http://github.com/tfyamaguchi/LKmodel
 BugRepOrts: http://github.com/tfyamaguchi/LKmodel/issues
 RoxygenNote: 6.1.1
 Suggests: 
+    rmarkdown, 
+    stargazer,
     knitr,
-    rmarkdown
+    Hmisc,
+    doParallel,
+    foreach
 VignetteBuilder: knitr

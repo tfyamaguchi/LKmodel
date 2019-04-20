@@ -4,9 +4,12 @@
 \name{ajk_Longini_table3}
 \alias{ajk_Longini_table3}
 \title{Houshold infeection data table
-Longini and Koopman (1982) Table3}
+#' Longini and Koopman (1982) Table3}
 \format{A dataframe}
 \description{
+Houshold infeection data table
+#' Longini and Koopman (1982) Table3
+
 Houshold infeection data table
 Longini and Koopman (1982) Table3
 }
