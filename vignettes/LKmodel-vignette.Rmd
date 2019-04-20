@@ -600,7 +600,8 @@ library(LKmodel)
 library(foreach)
 library(doParallel)
 ```
-```{r eval=TRUE, results='asis', echo=FALSE, fig.show='hold',fig.align="center",fig.width=6,fig.height=6,fig.cap="検出力曲線による検定法の比較．有意水準は両側$p=0.05$で，プラセボ群の$B$は0.85，$Q$は0.75とし，実薬群の$B$は0.9，$Q$は0.9とした．"}
+
+```{r eval=TRUE, results='asis', echo=FALSE, fig.show='hold',fig.align="center",fig.width=6,fig.height=6,fig.cap="Comparison of test method by power curve. The significant level was p=0.05, and $B=0.85$, $Q=0.75$ in placebo group, $B=0.9$, $Q=0.9$ in active group"}
 ###################### END OF PROGRAM #######################
 # Comparison of test methods
 #############################################################
@@ -627,7 +628,7 @@ ccpval <- NULL
 plot(ccpval,type="p",bty="l",lty="dashed",ylab="Power",xlab="N of household each group",xlim=c(Nhmin,Nhmax),ylim=c(0,1.0))
 #
 registerDoParallel(detectCores())
-ccpval <- foreach (eachn=seq(50,100,5), .combine = rbind) %dopar% {
+ccpval <- foreach (eachn=seq(50,100,5), .combine = rbind, .packages="LKmodel") %dopar% {
     #cat("N=",eachn,"\n")
     cpval1 <- cpval2 <- cpval3 <- NULL
     for (n in 1:N){
@@ -695,7 +696,7 @@ for (cond in 1:4){
   #
   ccpval <- NULL
   registerDoParallel(detectCores())
-  ccpval <- foreach (eachn=seq(20,160,20), .combine = rbind) %dopar% {
+  ccpval <- foreach (eachn=seq(20,160,20), .combine = rbind, .packages = "LKmodel") %dopar% {
     #cat("N=",eachn,"\n")
     cpval <- NULL
     for (n in 1:N){
