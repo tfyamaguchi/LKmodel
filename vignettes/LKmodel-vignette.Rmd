@@ -505,18 +505,55 @@ $H_{0}$のもとでの対数尤度を求めるため，2つの群のデータを
 ## 結果
 ### 既報との一致
 パラメータの推定法については，既報に具体的なデータとともに推定結果が記載されているので，
-開発したプログラムによる計算結果と一致するかどうか検討した(Table paper)．
+開発したプログラムによる計算結果と一致するかどうか検討した．
+```{r include=FALSE}
+library(LKmodel)
+```
+```{r include=TRUE}
+data("ajk_Longini_table1")
+res <-LKmodel.test(x=ajk_Longini_table1)
+summary(res)
+```
+```{r include=TRUE}
+data("ajk_Longini_table2Seatle")
+data("ajk_Longini_table2Tecumeseh")
+res <-LKmodel.test(x=ajk_Longini_table2Seatle,y=ajk_Longini_table2Tecumeseh)
+summary(res)
+```
+```{r include=TRUE}
+data("ajk_Longini_table3uncrowded")
+res <-LKmodel.test(x=ajk_Longini_table3uncrowded)
+summary(res)
+```
+```{r include=TRUE}
+data("ajk_Longini_table3crowded")
+res <-LKmodel.test(x=ajk_Longini_table3crowded)
+summary(res)
+```
 
+```{r include=TRUE}
+data("ajk_Longini_table3overcrowded")
+res <-LKmodel.test(x=ajk_Longini_table3overcrowded)
+summary(res)
+```
+
+```{r include=TRUE}
+data("ajk_Haber_table1")
+res <-LKmodel.test(x=ajk_Haber_table1)
+summary(res)
+```
+
+これらの結果を次の表にまとめた．
 
 |      |            | 既報   | 本報   | 一致性         |
 |:-----|-----------:|-------:|-------:|---------------:|
 | **@Longini_1982_7082755** のTable 1
-| |$\hat{Q}$         | 0.834  | 0.834  | $\Large \circ$ |
-| |$\mathrm{Var}(Q)$ | 0.0063 | 0.0063 | $\Large \circ$ |
-| |$\hat{B}$         | 0.886  | 0.886  | $\Large \circ$ |
-| |$\mathrm{Var}(B)$ | 0.0009 | 0.0009 | $\Large \circ$ |
-| |$\chi^2$          | 1.222  | 1.222  | $\Large \circ$ |
-| **@Longini_1982_7082755** のTable 2}
+| |$\hat{Q}$         | 0.834  | 0.834  | $\checkmark$ |
+| |$\mathrm{Var}(Q)$ | 0.0063 | 0.0063 | $\checkmark$ |
+| |$\hat{B}$         | 0.886  | 0.886  | $\checkmark$ |
+| |$\mathrm{Var}(B)$ | 0.0009 | 0.0009 | $\checkmark$ |
+| |$\chi^2$          | 1.222  | 1.222  | $\checkmark$ |
+| **@Longini_1982_7082755** のTable 2
 | |$\hat{Q_{1}}$     | 0.601  | 0.541  | $\Large \times$|
 | |$\hat{B_{1}}$     | 0.715  | 0.999  | $\Large \times$|
 | |$\chi^{2}_{1}$    | 0.018  | 0.387  | $\Large \times$|
@@ -524,31 +561,29 @@ $H_{0}$のもとでの対数尤度を求めるため，2つの群のデータを
 | |$\hat{B_{2}}$     | 0.655  | 0.999  | $\Large \times$|
 | |$\chi^{2}_{2}$    | 0.018  | 1.161  | $\Large \times$|
 | **@Longini_1982_7082755** のTable 3
-| |$\hat{Q_{1}}$ | 0.900 | 0.898 | $\Large \times$|
-| |$\hat{B_{1}}$ | 0.992 | 0.999 | $\Large \times$|
-| |$\chi^{2}_{1}$ | 0.864 | 0.880 | $\Large \times$|
-| |$\hat{Q_{2}}$ | 0.878 | 0.878 | $\Large \circ$|
-| |$\hat{B_{2}}$ | 0.999 | 0.999 | $\Large \circ$|
-| |$\chi^{2}_{2}$ | 5.91 | 5.99 | $\Large \times$|
-| |$\hat{Q_{3}}$ | 0.872 | 0.872 | $\Large \circ$|
-| |$\hat{B_{3}}$ | 0.999 | 0.999 | $\Large \circ$|
-| |$\chi^{2}_{3}$ | 4.12 | 4.18 | $\Large \times$|
+| |$\hat{Q_{1}}$     | 0.900  | 0.898  | $\Large \times$|
+| |$\hat{B_{1}}$     | 0.992  | 0.999  | $\Large \times$|
+| |$\chi^{2}_{1}$    | 0.864  | 0.880  | $\Large \times$|
+| |$\hat{Q_{2}}$     | 0.878  | 0.878  | $\checkmark$|
+| |$\hat{B_{2}}$     | 0.999  | 0.999  | $\checkmark$|
+| |$\chi^{2}_{2}$    | 5.91   | 5.99   | $\Large \times$|
+| |$\hat{Q_{3}}$     | 0.872  | 0.872  | $\checkmark$|
+| |$\hat{B_{3}}$     | 0.999  | 0.999  | $\checkmark$|
+| |$\chi^{2}_{3}$    | 4.12   | 4.18   | $\Large \times$|
 | **@Haber_1988_3358986** のTable 1
-| |$\widehat{CPI}$ | 0.140 | 0.140 | $\Large \circ$|
-| |$\mathrm{SE}(CPI)$ | 0.015 | 0.015 | $\Large \circ$|
-| |$\widehat{SAR}$ | 15.5 | 15.5 | $\Large \circ$|
-| |$\mathrm{SE}(B)$ | 3.5 | 3.5 | $\Large \circ$|
-| |$\chi^2$ | 12.14 | 12.14 | $\Large \circ$|
+| |$\widehat{CPI}$   | 0.140  | 0.140  | $\checkmark$|
+| |$\mathrm{SE}(CPI)$| 0.015  | 0.015  | $\checkmark$|
+| |$\widehat{SAR}$   | 15.5   | 15.5   | $\checkmark$|
+| |$\mathrm{SE}(B)$  | 3.5    | 3.5    | $\checkmark$|
+| |$\chi^2$          | 12.14  | 12.14  | $\checkmark$|
 :     開発したソフトウエアによる計算結果と既報の計算結果との比較 \label{paper}
 
-
 まず，感染しなかった家庭数が観測されている．
-\citet{Longini_1982_7082755}のTable 1では，報告されているすべての数字が完全に一致した．
-また，\citet{Haber_1988_3358986}のTable 1でも，報告されているすべての数字が一致した．
+@Longini_1982_7082755 のTable 1では，報告されているすべての数字が完全に一致した．
+また，@Haber_1988_3358986 のTable 1でも，報告されているすべての数字が一致した．
 一方で，感染しなかった家庭数が観測されていない
-\citet{Longini_1982_7082755}のTable 2では乖離がみられ，
-データ数の多い\citet{Longini_1982_7082755}のTable 3でも，Table 2ほどではないが，若干の乖離がみられる．
-
+@Longini_1982_7082755 のTable 2では乖離がみられ，
+データ数の多い @Longini_1982_7082755 のTable 3でも，Table 2ほどではないが，若干の乖離がみられる．
 
 ### 検出力の計算
 $B$および$Q$が既知のもとでの，発症者数の確率は，式(\ref{prob1})より求められるので，
@@ -562,8 +597,10 @@ Fig. \ref{powertest}は，プラセボ群を$B_{P}=0.85$,$Q_{P}=0.75$とし，
 なお，シミュレーションは各点で1000回繰り返して検出力を計算した．
 ```{r include=FALSE}
 library(LKmodel)
+library(foreach)
+library(doParallel)
 ```
-```{r results='asis', echo=FALSE, fig.show='hold',fig.align="center",fig.width=6,fig.height=6,fig.cap="検出力曲線による検定法の比較．有意水準は両側$p=0.05$で，プラセボ群の$B$は0.85，$Q$は0.75とし，実薬群の$B$は0.9，$Q$は0.9とした．"}
+```{r eval=TRUE, results='asis', echo=FALSE, fig.show='hold',fig.align="center",fig.width=6,fig.height=6,fig.cap="検出力曲線による検定法の比較．有意水準は両側$p=0.05$で，プラセボ群の$B$は0.85，$Q$は0.75とし，実薬群の$B$は0.9，$Q$は0.9とした．"}
 ###################### END OF PROGRAM #######################
 # Comparison of test methods
 #############################################################
@@ -571,21 +608,28 @@ para <- c("LR","W","SC")
 methodlong <- c("Likelihood ratio test","Wald test","Score test")
 zero <- FALSE
 nFamily <- 4
-N <- 100
+N <- 1000
+set.seed(12341234)
 #
-for (cond in 1:3){
-  Ba <- 0.90
-  Bp <- 0.85
-  Qa <- 0.90
-  Qp <- 0.75
-  #
-  proba <- estmjk(Ba,Qa)
-  probp <- estmjk(Bp,Qp)
-  #
-  ccpval <- NULL
-  for (eachn in seq(50,100,5)){
+Ba <- 0.90
+Bp <- 0.85
+Qa <- 0.90
+Qp <- 0.75
+#
+Nhmin <- 50
+Nhmax <- 100
+#
+#
+proba <- estmjk(Ba,Qa)
+probp <- estmjk(Bp,Qp)
+#
+ccpval <- NULL
+plot(ccpval,type="p",bty="l",lty="dashed",ylab="Power",xlab="N of household each group",xlim=c(Nhmin,Nhmax),ylim=c(0,1.0))
+#
+registerDoParallel(detectCores())
+ccpval <- foreach (eachn=seq(50,100,5), .combine = rbind) %dopar% {
     #cat("N=",eachn,"\n")
-    cpval <- NULL
+    cpval1 <- cpval2 <- cpval3 <- NULL
     for (n in 1:N){
       cda <- cdp <- NULL
       while(length(cda)< eachn) {
@@ -607,17 +651,17 @@ for (cond in 1:3){
       mdatp[,nFamily] <- catdp
       if (zero) mdata[1,] <- mdatp[1,] <- NA
       #browser()
-      cpval <- c(cpval, LKmodel.test(mdata,mdatp,method=para[cond])$p.value)
+      cpval1 <- c(cpval1, LKmodel.test(mdata,mdatp,method=para[1])$p.value)
+      cpval2 <- c(cpval2, LKmodel.test(mdata,mdatp,method=para[2])$p.value)
+      cpval3 <- c(cpval3, LKmodel.test(mdata,mdatp,method=para[3])$p.value)
     }
-    ccpval <- rbind(ccpval,c(N=eachn,pval=length(cpval[cpval<0.05])/length(cpval)))
-  }
-  #
-  if(cond==1) {
-    plot(ccpval,type="b",bty="l",lty="dashed",ylab="Power",xlab="N of household each group",ylim=c(0,1.0),col=cond,pch=cond)
-  } else {
-    points(ccpval,type="b",bty="l",lty="dashed",col=cond,pch=cond)
-  }
+    ccpval <- rbind(ccpval,c(N=eachn,pval1=length(cpval1[cpval1<0.05])/length(cpval1),pval2=length(cpval2[cpval2<0.05])/length(cpval2),pval3=length(cpval3[cpval3<0.05])/length(cpval3)))
 }
+stopImplicitCluster()
+  #
+  points(x=ccpval[,1],y=ccpval[,2],type="b",bty="l",lty="dashed",col=1,pch=1)
+  points(x=ccpval[,1],y=ccpval[,3],type="b",bty="l",lty="dashed",col=2,pch=2)
+  points(x=ccpval[,1],y=ccpval[,4],type="b",bty="l",lty="dashed",col=3,pch=3)
 legend("bottomright",legend=list(methodlong[1],methodlong[2],methodlong[3]),bty="n",col=1:3,pch=1:3)
 abline(h=0.8,lty=2)
 #
@@ -632,24 +676,26 @@ Wald検定とScore検定はほぼ同等だが，Score検定のほうが若干サ
 シミュレーションでは，active群で$B$が0.85で変化しない場合と，$B$が0.9に変化する場合とを想定し，
 active群の$Q$は，0.85,0.875,0.9の場合で家庭数と検出力の関係をプロットした．
 家庭数は，すべて4人家庭を想定した．
-```{r results='asis', echo=FALSE, fig.show='hold',fig.align="center",fig.width=6,fig.height=6,fig.cap="実薬群のQを変化させた際の検出力曲線．有意水準は両側p=0.05で，プラセボ群のQは0.75とした．"}
+```{r eval=TRUE, results='asis', echo=FALSE, fig.show='hold',fig.align="center",fig.width=6,fig.height=6,fig.cap="実薬群のQを変化させた際の検出力曲線．有意水準は両側p=0.05で，プラセボ群のQは0.75とした．"}
 paraBa <- c(0.96,0.97,0.98,0.99)
 paraQa <- c(0.82,0.84,0.86,0.88)
 zero <- FALSE
 nFamily <- 3
+set.seed(12341234)
 #
 for (cond in 1:4){
   Ba <- paraBa[cond]
   Bp <- 0.94
   Qa <- paraQa[cond]
   Qp <- 0.80
-  N <- 100
+  N <- 1000
   #
   proba <- estmjk(Ba,Qa)
   probp <- estmjk(Bp,Qp)
   #
   ccpval <- NULL
-  for (eachn in seq(20,160,20)){
+  registerDoParallel(detectCores())
+  ccpval <- foreach (eachn=seq(20,160,20), .combine = rbind) %dopar% {
     #cat("N=",eachn,"\n")
     cpval <- NULL
     for (n in 1:N){
@@ -675,6 +721,7 @@ for (cond in 1:4){
     }
     ccpval <- rbind(ccpval,c(N=eachn,pval=length(cpval[cpval<0.05])/length(cpval)))
   }
+  stopImplicitCluster()
   #
   if(cond==1) {
     plot(ccpval,type="b",bty="l",lty="dashed",ylab="Power",xlab="N of household each group",ylim=c(0,1.0),col=cond,pch=cond)

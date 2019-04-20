@@ -4,9 +4,9 @@
 \name{LKmodel}
 \alias{LKmodel}
 \alias{LKmodel-package}
-\title{LKmodel: A package for infectious model.}
+\title{LKmodel: A package for household infectious model.}
 \description{
-LKmodel: A package for infectious model.
+LKmodel: A package for household infectious model.
 }
 \references{
 {

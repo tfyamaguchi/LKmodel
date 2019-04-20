@@ -468,20 +468,20 @@ summary.LKmodel.test <- function(object, ...){
   #cat("Data.y;\t",object$y)
   cat(sprintf("Qhat.x; %.3f\t",object$Q1))
   cat(sprintf("Bhat.x; %.3f\n",object$B1))
-  cat(sprintf("Var(Qhat.x); %.4f\t",object$V1[2,2]))
-  cat(sprintf("Var(Bhat.x); %.4f\n",object$V1[1,1]))
+  cat(sprintf("Var(Qhat.x); %.4f\t",object$V1[1,1]))
+  cat(sprintf("Var(Bhat.x); %.4f\n",object$V1[2,2]))
   cat(sprintf("Goodness of fit for x chi^2; %.3f\t",object$chi1))
-  cat(sprintf("P-value; %.3f\n",object$p.value1))
+  cat(sprintf("P-value; %3s\n",Hmisc::format.pval(object$p.value1,eps=0.001,digits=3)))
   if (!is.null(object$y)){
     cat(sprintf("Qhat.y; %.3f\t",object$Q2))
     cat(sprintf("Bhat.y; %.3f\n",object$B2))
-    cat(sprintf("Var(Qhat.y); %.4f\t",object$V2[2,2]))
-    cat(sprintf("Var(Bhat.y); %.4f\n",object$V2[1,1]))
+    cat(sprintf("Var(Qhat.y); %.4f\t",object$V2[1,1]))
+    cat(sprintf("Var(Bhat.y); %.4f\n",object$V2[2,2]))
     cat(sprintf("Goodness of fit for y chi^2; %.3f\t",object$chi2))
-    cat(sprintf("P-value; %.3f\n",object$p.value2))
+    cat(sprintf("P-value; %3s\n",Hmisc::format.pval(object$p.value2,eps=0.001,digits=3)))
     cat(sprintf("Test method; %s\n",object$method))
     cat(sprintf("Test statistics; %.3f\t",object$stat))
-    cat(sprintf("P-value; %.3f\n",object$p.value))
+    cat(sprintf("P-value; %3s\n",Hmisc::format.pval(object$p.value,eps=0.001,digits=3)))
   }
 }
 #
