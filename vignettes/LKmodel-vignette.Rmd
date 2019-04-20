@@ -122,7 +122,7 @@ L-Kモデルの尤度関数については，既報[@Longini_1982_7082755]に詳
 
 
 ```{r results='asis', echo=FALSE}
-stargazer::stargazer(x=LKmodel::ajk_Haber_table1,title="Observed frequencies on a household level from the influenza A(H3N2) epidemic season (1977-1978) in Tecumseh, Michigan", type="html",label="lk1988table1",summary=FALSE)
+stargazer::stargazer(x=LKmodel::ajk_Haber_table1,title="#tbl:lk1988table Observed frequencies on a household level from the influenza A(H3N2) epidemic season (1977-1978) in Tecumseh, Michigan", type="html",label="#tbl:lk1988table1",summary=FALSE)
 ```
 
 表\ref{prob}は，表のセルに記号$a_{jk}$を用いたものである．
@@ -156,7 +156,7 @@ stargazer::stargazer(x=LKmodel::ajk_Haber_table1,title="Observed frequencies on 
 3 | ---  | --- | $a_{33}$ | $a_{34}$ |
 4 | --- | --- | --- | $a_{44}$|
 Total | $\sum_{j}a_{j1}$ | $\sum_{j}a_{j2}$ | $\sum_{j}a_{j3}$ | $\sum_{j}a_{j4}$ |
-: [lk1988table1] の記号による表現
+: #tbl:lk1988table1-2 [@tbl:lk1988table]の記号による表現
 
 ### 尤度関数と対数尤度関数
 
