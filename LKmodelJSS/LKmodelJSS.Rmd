@@ -43,6 +43,19 @@ Don't use markdown, instead use the more precise latex commands:
 Can be inserted in regular R markdown blocks.
 
 ```{r}
-x <- 1:10
-x
+library(survival)
+y1<- as.matrix(rbinom(100,1,0.0050),ncol=1)
+y2<- as.matrix(rbinom(100,1,0.0070),ncol=1)
+for (i in 1:59){
+  y1 <- cbind(y1,as.numeric(y1[,i] | rbinom(100,1,0.0050)))
+  y2 <- cbind(y2,as.numeric(y2[,i] | rbinom(100,1,0.0070)))
+}
+y1 <- cbind(time=60-rowSums(y1),cens=ifelse(rowSums(y1)>0,1,0))
+y2 <- cbind(time=60-rowSums(y2),cens=ifelse(rowSums(y2)>0,1,0))
+df <- data.frame(ID=1:200,treat=c(rep("Placebo",100),rep("Active",100)),rbind(y1,y2))
+#df
+ge2.s <-survfit(Surv(time,cens)~treat,data= df,type="kaplan-meier")
+plot(ge2.s,fun="event",ylim=c(0,1),lty=1:2,col=1:2)
+survdiff(Surv(time)~treat,data=df,rho=0) 
+legend("topright",legend=c("Placebo","Active"),lty=1:2,col=1:2,bty="n")
 ```
