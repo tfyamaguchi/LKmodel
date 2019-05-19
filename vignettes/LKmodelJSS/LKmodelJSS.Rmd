@@ -1,0 +1,83 @@
+---
+author:
+  - name: Tohru Yamaguchi
+    affiliation: Kao Corporation
+    address: >
+      2-1-3 bunka sumida
+      Tokyo 131-8501, Japan
+    email: \email{yamaguchi.tohru@kao.com}
+    url: http://rstudio.com
+  - name: Second Author
+    affiliation: Affiliation
+title:
+  formatted: "LKmodel Package: A mathmatical model for household infection \\pkg{LKmodel}"
+  # If you use tex in the formatted title, also supply version without
+  plain:     "A Capitalized Title: Something about a Package foo"
+  # For running headers, if needed
+  short:     "\\pkg{LKmodel}: A mathmatical model for household infection"
+abstract: >
+  For a estimation of the infectiveness under the assumption of mathematical model, either of the **basic reproduction number** which is an estimate of the number of secondary infected persons from one infected patient or the **secondary infection risk (SIR)** with exposure of one infected patient in small-scale groups such as household or school is frequently employed. Longini and Koopman proposed an infectious disease mathematical model (L-K model) which estimating an infection risk from distribution of the number of infected patients in the home within one season. There are two parameters, $B$ and $Q$, which should be estimated in this model, $1-B$ can be interpreted medically as the infection probability from a community, and $1-Q$ as the household secondary attack rate which is an index of SIR. Although a previous paper described the estimation method for these parameters in an epidemiological observation study, the statistical test method for the clinical trial which compares two intervention groups was not studied. In order to show the efficacy of the medical agent under development, it is necessary to plan, carry out and conduct data-analysis of the clinical trial however, the calculation of the required number of subjects is impossible without the appropriate test method. Then, the parameter estimation method was extended, and the test method for the difference of $Q$ between 2 groups in this L-K model was newly developed. The developed tests were derived from the framework of the statistical test method for the likelihood based-model called a **likelihood ratio test**, **Wald test**, and **score test**. The computational procedure was packed. As a result, the calculation result described in the paper was reproduced. Moreover, the number of subjects in a clinical trial was estimated from Monte Carlo simulation using the developed test method, and the reasonable results were obtained. The developed statistical test method may use in clinical trials for prevettive agent for household infection.
+keywords:
+  # at least one keyword must be supplied
+  formatted: [keywords, not capitalized, "\\proglang{Java}"]
+  plain:     [keywords, not capitalized, Java]
+preamble: >
+  \usepackage{amsmath}
+output: rticles::jss_article
+---
+
+# Introduction
+
+This template demonstrates some of the basic latex you'll need to know to create a JSS article.
+
+## Code formatting
+
+Don't use markdown, instead use the more precise latex commands:
+
+* \proglang{Java}
+* \pkg{plyr}
+* \code{print("abc")}
+
+# R code
+
+Can be inserted in regular R markdown blocks.
+
+```{r power, echo=FALSE, message=FALSE, warning=FALSE}
+library(survival)
+set.seed(1234)
+cpow <- NULL
+for (n in seq(150,250,10)){
+cres <- NULL
+for (i in 1:1000){
+p1 <- 0.004
+p2 <- 0.007
+period <- 60
+y1<- as.matrix(rbinom(n,1,p1),ncol=1)
+y2<- as.matrix(rbinom(n,1,p2),ncol=1)
+for (i in 1:(period-1)){
+  y1 <- cbind(y1,as.numeric(y1[,i] | rbinom(n,1,p1)))
+  y2 <- cbind(y2,as.numeric(y2[,i] | rbinom(n,1,p2)))
+}
+y1 <- cbind(time=period-rowSums(y1),cens=ifelse(rowSums(y1)>0,1,0))
+y2 <- cbind(time=period-rowSums(y2),cens=ifelse(rowSums(y2)>0,1,0))
+df <- data.frame(ID=1:(2*n),treat=c(rep("Placebo",n),rep("Active",n)),rbind(y1,y2))
+res <- survdiff(Surv(time)~treat,data=df,rho=0) 
+pvalue <- pchisq(res$chisq,df=1,lower.tail=FALSE)
+resp <- prop.test(x=c(nrow(df[df$treat=="Active" & df$cens==1,]),nrow(df[df$treat=="Placebo" & df$cens==1,])),
+                  n=c(nrow(df[df$treat=="Active",]),nrow(df[df$treat=="Active",])))
+cres <- rbind(cres,c(N=n,p.value=pvalue,p.value2=resp$p.value))
+}
+pow <- nrow(cres[cres[,"p.value"]<0.05,])/nrow(cres)
+pow2 <- nrow(cres[cres[,"p.value2"]<0.05,])/nrow(cres)
+cpow <- rbind(cpow,c(N=n,power=pow,power2=pow2))
+}
+cpow
+plot(x=cpow[,"N"],y=cpow[,c("power")],bty="l",ylim=c(0,1),type="b",pch=1,col="blue",xlab="Number of subjects",ylab="Power")
+points(x=cpow[,"N"],y=cpow[,c("power2")],bty="l",ylim=c(0,1),type="b",pch=2,col="red")
+abline(h=0.8,lty=2)
+legend("bottomright",legend=c("Kaplan-Meier","test for proportion"),bty="n",pch=1:2,col=c("blue","red"))
+#
+ge2.s <-survfit(Surv(time,cens)~treat,data= df,type="kaplan-meier")
+plot(ge2.s,fun="event",ylim=c(0,1),lty=1:2,col=1:2)
+legend("topright",legend=c("Placebo","Active"),lty=1:2,col=1:2,bty="n")
+```
