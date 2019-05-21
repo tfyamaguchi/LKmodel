@@ -1,11 +1,11 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/W32TeX) (preloaded format=pdflatex 2018.12.11)  21 APR 2019 16:54
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/W32TeX) (preloaded format=pdflatex 2018.12.11)  21 MAY 2019 11:09
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**C:/Users/301602/AppData/Local/Temp/RtmpSePkc7/preview-1b3866023a85.dir/LKmode
+**C:/Users/301602/AppData/Local/Temp/RtmpwbwmTQ/preview-b51c1f282515.dir/LKmode
 lJSS.tex
 
-(c:/Users/301602/AppData/Local/Temp/RtmpSePkc7/preview-1b3866023a85.dir/LKmodel
+(c:/Users/301602/AppData/Local/Temp/RtmpwbwmTQ/preview-b51c1f282515.dir/LKmodel
 JSS.tex
 LaTeX2e <2018-12-01>
 (./jss.cls
@@ -503,7 +503,7 @@ LaTeX Info: Redefining \nameref on input line 73.
 \@outlinefile=\write4
 \openout4 = `LKmodelJSS.out'.
 
-<jsslogo.jpg, id=16, 540.0175pt x 393.47pt>
+<jsslogo.jpg, id=8, 540.0175pt x 393.47pt>
 File: jsslogo.jpg Graphic file (type jpg)
 <use jsslogo.jpg>
 Package pdftex.def Info: jsslogo.jpg  used on input line 73.
@@ -543,11 +543,11 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 LaTeX Font Warning: Font shape `T1/aer/m/sl' undefined
-(Font)              using `T1/aer/m/n' instead on input line 84.
+(Font)              using `T1/aer/m/n' instead on input line 81.
 
 
 LaTeX Font Warning: Font shape `T1/aer/b/sl' undefined
-(Font)              using `T1/aer/b/n' instead on input line 84.
+(Font)              using `T1/aer/b/n' instead on input line 81.
 
 
 Overfull \hbox (5.44394pt too wide) has occurred while \output is active
@@ -555,70 +555,88 @@ Overfull \hbox (5.44394pt too wide) has occurred while \output is active
  []
 
 [2]
-LaTeX Font Info:    Try loading font information for TS1+aer on input line 88.
-LaTeX Font Info:    No file TS1aer.fd. on input line 88.
-
-LaTeX Font Warning: Font shape `TS1/aer/m/n' undefined
-(Font)              using `TS1/cmr/m/n' instead
-(Font)              for symbol `textbullet' on input line 88.
-
-LaTeX Font Info:    Try loading font information for T1+aett on input line 92.
-LaTeX Font Info:    No file T1aett.fd. on input line 92.
+<C:/Users/301602/AppData/Local/Temp/RtmpwbwmTQ/preview-b51c1f282515.dir/LKmodel
+JSS_files/figure-latex/power-1.pdf, id=30, 353.32pt x 264.99pt>
+File: C:/Users/301602/AppData/Local/Temp/RtmpwbwmTQ/preview-b51c1f282515.dir/LK
+modelJSS_files/figure-latex/power-1.pdf Graphic file (type pdf)
+<use C:/Users/301602/AppData/Local/Temp/RtmpwbwmTQ/preview-b51c1f282515.dir/LKm
+odelJSS_files/figure-latex/power-1.pdf>
+Package pdftex.def Info: C:/Users/301602/AppData/Local/Temp/RtmpwbwmTQ/preview-
+b51c1f282515.dir/LKmodelJSS_files/figure-latex/power-1.pdf  used on input line 
+88.
+(pdftex.def)             Requested size: 354.12434pt x 265.59586pt.
+<C:/Users/301602/AppData/Local/Temp/RtmpwbwmTQ/preview-b51c1f282515.dir/LKmodel
+JSS_files/figure-latex/power-2.pdf, id=31, 353.32pt x 264.99pt>
+File: C:/Users/301602/AppData/Local/Temp/RtmpwbwmTQ/preview-b51c1f282515.dir/LK
+modelJSS_files/figure-latex/power-2.pdf Graphic file (type pdf)
+<use C:/Users/301602/AppData/Local/Temp/RtmpwbwmTQ/preview-b51c1f282515.dir/LKm
+odelJSS_files/figure-latex/power-2.pdf>
+Package pdftex.def Info: C:/Users/301602/AppData/Local/Temp/RtmpwbwmTQ/preview-
+b51c1f282515.dir/LKmodelJSS_files/figure-latex/power-2.pdf  used on input line 
+92.
+(pdftex.def)             Requested size: 354.12434pt x 265.59586pt.
+LaTeX Font Info:    Try loading font information for T1+aett on input line 98.
+LaTeX Font Info:    No file T1aett.fd. on input line 98.
 
 LaTeX Font Warning: Font shape `T1/aett/m/n' undefined
-(Font)              using `T1/cmr/m/n' instead on input line 92.
+(Font)              using `T1/cmr/m/n' instead on input line 98.
 
 
-LaTeX Font Warning: Font shape `T1/aett/m/sl' undefined
-(Font)              using `T1/aett/m/n' instead on input line 102.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 114--114
+Underfull \hbox (badness 10000) in paragraph at lines 98--98
 
  []
 
 LaTeX Font Info:    Font shape `T1/pzc/m/n' in size <13> not available
-(Font)              Font shape `T1/pzc/mb/it' tried instead on input line 114.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 114.
+(Font)              Font shape `T1/pzc/mb/it' tried instead on input line 98.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 98.
 
 Overfull \hbox (5.44394pt too wide) has occurred while \output is active
 [] \T1/aer/m/sl/10.95 3
  []
 
-[3]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 114.
+[3 <c:/Users/301602/AppData/Local/Temp/RtmpwbwmTQ/preview-b51c1f282515.dir/LKmo
+delJSS_files/figure-latex/power-1.pdf> <c:/Users/301602/AppData/Local/Temp/Rtmp
+wbwmTQ/preview-b51c1f282515.dir/LKmodelJSS_files/figure-latex/power-2.pdf>]
+Overfull \hbox (5.44394pt too wide) has occurred while \output is active
+\T1/aer/b/sl/10.95 4 []
+ []
+
+[4]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 98.
 (./LKmodelJSS.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 114.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 114.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 98.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 98.
 Package rerunfilecheck Info: File `LKmodelJSS.out' has not changed.
-(rerunfilecheck)             Checksum: 84587D5021232B248176644A5B388E33;209.
+(rerunfilecheck)             Checksum: 11A349C8B38AB431C076548D039F4D39;112.
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 114.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 98.
  ) 
 Here is how much of TeX's memory you used:
- 7697 strings out of 492615
- 108278 string characters out of 6131321
- 206934 words of memory out of 5000000
- 11497 multiletter control sequences out of 15000+600000
- 15892 words of font info for 38 fonts, out of 8000000 for 9000
+ 7689 strings out of 492615
+ 109207 string characters out of 6131321
+ 206881 words of memory out of 5000000
+ 11494 multiletter control sequences out of 15000+600000
+ 15551 words of font info for 37 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 37i,9n,39p,314b,321s stack positions out of 5000i,500n,10000p,500000b,80000s
- <c:/w32tex/share/texmf-dist/fonts/pk/ljfour/jknappen/ec/tcrm1095.600pk> <c:/
-w32tex/share/texmf-dist/fonts/pk/ljfour/jknappen/ec/ecrm1440.600pk> <c:/w32tex/
-share/texmf-dist/fonts/pk/ljfour/jknappen/ec/ecrm1200.600pk> <c:/w32tex/share/t
-exmf-dist/fonts/pk/ljfour/jknappen/ec/ecrm1728.600pk> <c:/w32tex/share/texmf-di
-st/fonts/pk/ljfour/jknappen/ec/ecrm1000.600pk>{c:/w32tex/share/texmf-dist/fonts
-/enc/dvips/psnfss/8r.enc} <c:/w32tex/share/texmf-dist/fonts/pk/ljfour/jknappen/
-ec/ecrm1095.600pk><c:/w32tex/share/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-mi10.pfb><c:/w32tex/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><
-c:/w32tex/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/w32tex
-/share/texmf-dist/fonts/type1/urw/zapfchan/uzcmi8a.pfb>
-Output written on LKmodelJSS.pdf (3 pages, 111934 bytes).
+ 37i,9n,39p,369b,329s stack positions out of 5000i,500n,10000p,500000b,80000s
+ <c:/w32tex/share/texmf-dist/fonts/pk/ljfour/jknappen/ec/ecrm1440.600pk> <c:/
+w32tex/share/texmf-dist/fonts/pk/ljfour/jknappen/ec/ecrm1200.600pk> <c:/w32tex/
+share/texmf-dist/fonts/pk/ljfour/jknappen/ec/ecrm1728.600pk> <c:/w32tex/share/t
+exmf-dist/fonts/pk/ljfour/jknappen/ec/ecrm1000.600pk>{c:/w32tex/share/texmf-dis
+t/fonts/enc/dvips/psnfss/8r.enc} <c:/w32tex/share/texmf-dist/fonts/pk/ljfour/jk
+nappen/ec/ecrm1095.600pk><c:/w32tex/share/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmmi10.pfb><c:/w32tex/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
+8.pfb><c:/w32tex/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/
+w32tex/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb><c:/w32tex/shar
+e/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/w32tex/share/texmf-d
+ist/fonts/type1/public/amsfonts/cm/cmsy8.pfb><c:/w32tex/share/texmf-dist/fonts/
+type1/urw/zapfchan/uzcmi8a.pfb>
+Output written on LKmodelJSS.pdf (4 pages, 145275 bytes).
 PDF statistics:
- 273 PDF objects out of 1000 (max. 8388607)
- 80 compressed objects within 1 object stream
- 13 named destinations out of 1000 (max. 500000)
- 30 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 274 PDF objects out of 1000 (max. 8388607)
+ 84 compressed objects within 1 object stream
+ 8 named destinations out of 1000 (max. 500000)
+ 24 words of extra memory for PDF output out of 10000 (max. 10000000)
 

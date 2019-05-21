@@ -26,32 +26,36 @@ preamble: >
 output: rticles::jss_article
 ---
 
-# Introduction
 
-This template demonstrates some of the basic latex you'll need to know to create a JSS article.
+# Estimation based on Reed-Forest model
 
-## Code formatting
-
-Don't use markdown, instead use the more precise latex commands:
-
-* \proglang{Java}
-* \pkg{plyr}
-* \code{print("abc")}
-
-# R code
-
-Can be inserted in regular R markdown blocks.
+The Reed-Forest model which is one of the chain binomial model was as follows.
+\[\Pr(I_{t+1}=x|S_{t}=s,I_{t}=i)=\frac{s!}{x!(s-x)!}p_{i}^{x}q_{i}^{s-x}\],
+where $q_{a}=1-p_{a}$.
+<!-- ここで，$q_{a}=1-p_{a}$である．
+この式の意味するところは，時刻$t$において，感染者数が$i$人で，
+感受性宿主（非感染者）が$s$人であるというもとで，新たな感染者$I_{t+1}$の人数が
+$x$人である確率は，二項分布$B(x|s,p)=\frac{s!}{x!(s-x)!}p_{i}^{x}q_{i}^{s-x}$に
+従うというものである．従って，感受性宿主$s$人の各々は，成功確率$p_{i}$のベルヌーイ分布に従うことになる．
+この状況をプログラムにして，シミュレーションを行った．
+-->
+We programmed this situation, and a numreric simulation was carried out.
 
 ```{r power, echo=FALSE, message=FALSE, warning=FALSE}
 library(survival)
+############################# Conditions ###########################
+nstart <- 50 # 検討する最小N数
+nstop <- 110 # 検討する最大N数
+period <- 8 # 観察期間
+p1 <- 0.25/period # Active群の１日あらりの発症確率
+p2 <- 0.16/period # Placebo群の１日あたりの発症確率
+############################# START ###############################
 set.seed(1234)
 cpow <- NULL
-for (n in seq(150,250,10)){
+for (n in seq(nstart,nstop,10)){
 cres <- NULL
 for (i in 1:1000){
-p1 <- 0.004
-p2 <- 0.007
-period <- 60
+
 y1<- as.matrix(rbinom(n,1,p1),ncol=1)
 y2<- as.matrix(rbinom(n,1,p2),ncol=1)
 for (i in 1:(period-1)){
@@ -71,13 +75,14 @@ pow <- nrow(cres[cres[,"p.value"]<0.05,])/nrow(cres)
 pow2 <- nrow(cres[cres[,"p.value2"]<0.05,])/nrow(cres)
 cpow <- rbind(cpow,c(N=n,power=pow,power2=pow2))
 }
-cpow
-plot(x=cpow[,"N"],y=cpow[,c("power")],bty="l",ylim=c(0,1),type="b",pch=1,col="blue",xlab="Number of subjects",ylab="Power")
+ge2.s <-survfit(Surv(time,cens)~treat,data= df,type="kaplan-meier")
+plot(ge2.s,fun="event",ylim=c(0,1),lty=1:2,col=c("blue","red"),xlab="Days",ylab="Prevalence rate",sub=paste("N for each group:",n))
+legend("topright",legend=c("Placebo","Active"),lty=1:2,col=c("blue","red"),bty="n")
+#########
+#cpow
+plot(x=cpow[,"N"],y=cpow[,c("power")],bty="l",ylim=c(0,1),type="b",pch=1,col="blue",xlab="Number of subjects for each group",ylab="Power",sub=paste("Infection probability per day;","placebo",p1,"active",p2))
 points(x=cpow[,"N"],y=cpow[,c("power2")],bty="l",ylim=c(0,1),type="b",pch=2,col="red")
 abline(h=0.8,lty=2)
-legend("bottomright",legend=c("Kaplan-Meier","test for proportion"),bty="n",pch=1:2,col=c("blue","red"))
+legend("bottomright",legend=c("log-rank test","test for proportion"),bty="n",pch=1:2,col=c("blue","red"))
 #
-ge2.s <-survfit(Surv(time,cens)~treat,data= df,type="kaplan-meier")
-plot(ge2.s,fun="event",ylim=c(0,1),lty=1:2,col=1:2)
-legend("topright",legend=c("Placebo","Active"),lty=1:2,col=1:2,bty="n")
 ```
