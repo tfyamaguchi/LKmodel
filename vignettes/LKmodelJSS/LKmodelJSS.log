@@ -1,11 +1,11 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/W32TeX) (preloaded format=pdflatex 2018.12.11)  21 MAY 2019 11:09
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/W32TeX) (preloaded format=pdflatex 2018.12.11)  27 MAY 2019 14:16
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**C:/Users/301602/AppData/Local/Temp/RtmpwbwmTQ/preview-b51c1f282515.dir/LKmode
+**C:/Users/301602/AppData/Local/Temp/RtmpC8jdXJ/preview-24e05a485403.dir/LKmode
 lJSS.tex
 
-(c:/Users/301602/AppData/Local/Temp/RtmpwbwmTQ/preview-b51c1f282515.dir/LKmodel
+(c:/Users/301602/AppData/Local/Temp/RtmpC8jdXJ/preview-24e05a485403.dir/LKmodel
 JSS.tex
 LaTeX2e <2018-12-01>
 (./jss.cls
@@ -555,24 +555,24 @@ Overfull \hbox (5.44394pt too wide) has occurred while \output is active
  []
 
 [2]
-<C:/Users/301602/AppData/Local/Temp/RtmpwbwmTQ/preview-b51c1f282515.dir/LKmodel
+<C:/Users/301602/AppData/Local/Temp/RtmpC8jdXJ/preview-24e05a485403.dir/LKmodel
 JSS_files/figure-latex/power-1.pdf, id=30, 353.32pt x 264.99pt>
-File: C:/Users/301602/AppData/Local/Temp/RtmpwbwmTQ/preview-b51c1f282515.dir/LK
+File: C:/Users/301602/AppData/Local/Temp/RtmpC8jdXJ/preview-24e05a485403.dir/LK
 modelJSS_files/figure-latex/power-1.pdf Graphic file (type pdf)
-<use C:/Users/301602/AppData/Local/Temp/RtmpwbwmTQ/preview-b51c1f282515.dir/LKm
+<use C:/Users/301602/AppData/Local/Temp/RtmpC8jdXJ/preview-24e05a485403.dir/LKm
 odelJSS_files/figure-latex/power-1.pdf>
-Package pdftex.def Info: C:/Users/301602/AppData/Local/Temp/RtmpwbwmTQ/preview-
-b51c1f282515.dir/LKmodelJSS_files/figure-latex/power-1.pdf  used on input line 
+Package pdftex.def Info: C:/Users/301602/AppData/Local/Temp/RtmpC8jdXJ/preview-
+24e05a485403.dir/LKmodelJSS_files/figure-latex/power-1.pdf  used on input line 
 88.
 (pdftex.def)             Requested size: 354.12434pt x 265.59586pt.
-<C:/Users/301602/AppData/Local/Temp/RtmpwbwmTQ/preview-b51c1f282515.dir/LKmodel
+<C:/Users/301602/AppData/Local/Temp/RtmpC8jdXJ/preview-24e05a485403.dir/LKmodel
 JSS_files/figure-latex/power-2.pdf, id=31, 353.32pt x 264.99pt>
-File: C:/Users/301602/AppData/Local/Temp/RtmpwbwmTQ/preview-b51c1f282515.dir/LK
+File: C:/Users/301602/AppData/Local/Temp/RtmpC8jdXJ/preview-24e05a485403.dir/LK
 modelJSS_files/figure-latex/power-2.pdf Graphic file (type pdf)
-<use C:/Users/301602/AppData/Local/Temp/RtmpwbwmTQ/preview-b51c1f282515.dir/LKm
+<use C:/Users/301602/AppData/Local/Temp/RtmpC8jdXJ/preview-24e05a485403.dir/LKm
 odelJSS_files/figure-latex/power-2.pdf>
-Package pdftex.def Info: C:/Users/301602/AppData/Local/Temp/RtmpwbwmTQ/preview-
-b51c1f282515.dir/LKmodelJSS_files/figure-latex/power-2.pdf  used on input line 
+Package pdftex.def Info: C:/Users/301602/AppData/Local/Temp/RtmpC8jdXJ/preview-
+24e05a485403.dir/LKmodelJSS_files/figure-latex/power-2.pdf  used on input line 
 92.
 (pdftex.def)             Requested size: 354.12434pt x 265.59586pt.
 LaTeX Font Info:    Try loading font information for T1+aett on input line 98.
@@ -594,9 +594,9 @@ Overfull \hbox (5.44394pt too wide) has occurred while \output is active
 [] \T1/aer/m/sl/10.95 3
  []
 
-[3 <c:/Users/301602/AppData/Local/Temp/RtmpwbwmTQ/preview-b51c1f282515.dir/LKmo
+[3 <c:/Users/301602/AppData/Local/Temp/RtmpC8jdXJ/preview-24e05a485403.dir/LKmo
 delJSS_files/figure-latex/power-1.pdf> <c:/Users/301602/AppData/Local/Temp/Rtmp
-wbwmTQ/preview-b51c1f282515.dir/LKmodelJSS_files/figure-latex/power-2.pdf>]
+C8jdXJ/preview-24e05a485403.dir/LKmodelJSS_files/figure-latex/power-2.pdf>]
 Overfull \hbox (5.44394pt too wide) has occurred while \output is active
 \T1/aer/b/sl/10.95 4 []
  []
